@@ -16,6 +16,10 @@ body {
   min-height: 100vh;
 }
 
+button {
+  font: inherit;
+}
+
 .homePage {
   display: grid;
   min-height: 100vh;
@@ -24,9 +28,79 @@ body {
   text-align: center;
 }
 
+.heroCard {
+  width: min(100%, 760px);
+  padding: clamp(32px, 8vw, 80px);
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: 0 24px 80px rgba(23, 53, 31, 0.12);
+}
+
+.eyebrow {
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
 h1 {
   margin: 0;
   font-size: clamp(3rem, 10vw, 7rem);
   line-height: 1;
   letter-spacing: -0.06em;
+}
+
+.intro {
+  max-width: 560px;
+  margin: 24px auto 0;
+  color: #3d5a44;
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  line-height: 1.6;
+}
+
+.languageSwitcher {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 34px;
+  padding: 6px;
+  border: 1px solid rgba(23, 53, 31, 0.16);
+  border-radius: 999px;
+  background: rgba(23, 53, 31, 0.06);
+}
+
+.languageSwitcher button {
+  min-width: 112px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  color: #17351f;
+  background: transparent;
+  font-weight: 700;
+  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.languageSwitcher button:hover,
+.languageSwitcher button:focus-visible {
+  background: rgba(23, 53, 31, 0.1);
+  outline: none;
+}
+
+.languageSwitcher button.active {
+  color: #f2ffe4;
+  background: #17351f;
+  box-shadow: 0 8px 24px rgba(23, 53, 31, 0.24);
+}
+
+@media (max-width: 520px) {
+  .languageSwitcher {
+    display: grid;
+    width: 100%;
+  }
+
+  .languageSwitcher button {
+    width: 100%;
+  }
 }
