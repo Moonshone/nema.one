@@ -1,0 +1,39 @@
+name: Deploy to nema.one
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository herunterladen
+        uses: actions/checkout@v4
+
+      - name: Node installieren
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pakete installieren
+        run: npm install
+
+      - name: Projekt bauen
+        run: npm run build
+
+      - name: Build prüfen
+        run: |
+          test -f dist/index.html
+          find dist -maxdepth 2 -type f
+
+      - name: Build per FTP hochladen
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /htdocs/
