@@ -72,12 +72,12 @@ function App() {
   return (
     <div className="siteShell">
       <header className="siteHeader">
-        <a className="brand" href="/" aria-label={content.logoLabel}>
+        <a className="brand" href="./" aria-label={content.logoLabel}>
           NEMA.one
         </a>
 
         <nav className="mainNav" aria-label={content.navLabel}>
-          <a href="/">{content.navigation.home}</a>
+          <a href="./">{content.navigation.home}</a>
         </nav>
 
         <div className="languageSwitcher" aria-label={content.switchLabel}>
