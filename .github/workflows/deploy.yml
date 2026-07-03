@@ -24,6 +24,11 @@ jobs:
       - name: Projekt bauen
         run: npm run build
 
+      - name: Build prüfen
+        run: |
+          test -f dist/index.html
+          find dist -maxdepth 2 -type f
+
       - name: Build per FTP hochladen
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
