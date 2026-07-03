@@ -33,8 +33,24 @@ const translations = {
   },
 }
 
+const getSavedLanguage = () => {
+  try {
+    return window.localStorage.getItem('language')
+  } catch {
+    return null
+  }
+}
+
+const saveLanguage = (language) => {
+  try {
+    window.localStorage.setItem('language', language)
+  } catch {
+    // The language switcher still works for the current visit if storage is blocked.
+  }
+}
+
 const getInitialLanguage = () => {
-  const savedLanguage = window.localStorage.getItem('language')
+  const savedLanguage = getSavedLanguage()
 
   if (savedLanguage && translations[savedLanguage]) {
     return savedLanguage
@@ -50,7 +66,7 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = language
     document.title = `nema.one | ${content.navigation.home}`
-    window.localStorage.setItem('language', language)
+    saveLanguage(language)
   }, [content.navigation.home, language])
 
   return (
