@@ -4,6 +4,32 @@ const apiUrl = '/api/get-artworks.php'
 
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
+const getArtworkImageUrl = (imgUrl) => {
+  if (!isFilled(imgUrl)) {
+    return ''
+  }
+
+  const normalizedUrl = String(imgUrl).trim()
+
+  if (/^https?:\/\//i.test(normalizedUrl)) {
+    return normalizedUrl.replace(/^http:\/\/nema\.one/i, `${window.location.protocol}//nema.one`)
+  }
+
+  if (normalizedUrl.startsWith('/')) {
+    return normalizedUrl
+  }
+
+  if (normalizedUrl.startsWith('www/')) {
+    return `/${normalizedUrl.slice(4)}`
+  }
+
+  if (!normalizedUrl.includes('/')) {
+    return `/Bilder/${normalizedUrl}`
+  }
+
+  return `/${normalizedUrl}`
+}
+
 function Artworks({ labels }) {
   const [artworks, setArtworks] = useState([])
   const [status, setStatus] = useState('loading')
@@ -54,47 +80,51 @@ function Artworks({ labels }) {
 
       {status === 'ready' && (
         <div className="artworksGrid">
-          {artworks.map((artwork) => (
-            <article className="artworkCard" key={artwork.id ?? artwork.name}>
-              {isFilled(artwork.img_url) && (
-                <img
-                  alt={isFilled(artwork.name) ? artwork.name : labels.imageAlt}
-                  className="artworkImage"
-                  loading="lazy"
-                  src={artwork.img_url}
-                />
-              )}
+          {artworks.map((artwork) => {
+            const imageUrl = getArtworkImageUrl(artwork.img_url)
 
-              <div className="artworkContent">
-                {isFilled(artwork.name) && <h3>{artwork.name}</h3>}
-
-                <dl className="artworkMeta">
-                  {isFilled(artwork.artist) && (
-                    <div>
-                      <dt>{labels.artist}</dt>
-                      <dd>{artwork.artist}</dd>
-                    </div>
-                  )}
-                  {isFilled(artwork.date) && (
-                    <div>
-                      <dt>{labels.date}</dt>
-                      <dd>{artwork.date}</dd>
-                    </div>
-                  )}
-                  {isFilled(artwork.price) && (
-                    <div>
-                      <dt>{labels.price}</dt>
-                      <dd>{artwork.price}</dd>
-                    </div>
-                  )}
-                </dl>
-
-                {isFilled(artwork.description) && (
-                  <p className="artworkDescription">{artwork.description}</p>
+            return (
+              <article className="artworkCard" key={artwork.id ?? artwork.name}>
+                {isFilled(imageUrl) && (
+                  <img
+                    alt={isFilled(artwork.name) ? artwork.name : labels.imageAlt}
+                    className="artworkImage"
+                    loading="lazy"
+                    src={imageUrl}
+                  />
                 )}
-              </div>
-            </article>
-          ))}
+
+                <div className="artworkContent">
+                  {isFilled(artwork.name) && <h3>{artwork.name}</h3>}
+
+                  <dl className="artworkMeta">
+                    {isFilled(artwork.artist) && (
+                      <div>
+                        <dt>{labels.artist}</dt>
+                        <dd>{artwork.artist}</dd>
+                      </div>
+                    )}
+                    {isFilled(artwork.date) && (
+                      <div>
+                        <dt>{labels.date}</dt>
+                        <dd>{artwork.date}</dd>
+                      </div>
+                    )}
+                    {isFilled(artwork.price) && (
+                      <div>
+                        <dt>{labels.price}</dt>
+                        <dd>{artwork.price}</dd>
+                      </div>
+                    )}
+                  </dl>
+
+                  {isFilled(artwork.description) && (
+                    <p className="artworkDescription">{artwork.description}</p>
+                  )}
+                </div>
+              </article>
+            )
+          })}
         </div>
       )}
     </section>
