@@ -1,8 +1,39 @@
 import { useEffect, useState } from 'react'
 
-const apiUrl = '/api/get-artworks.php'
+const productionOrigin = 'https://nema.one'
+const sameOriginApiUrl = '/api/get-artworks.php'
+const productionApiUrl = `${productionOrigin}/api/get-artworks.php`
+const githubPagesFallbackArtworks = [
+  {
+    id: 'github-pages-fallback-06',
+    name: '06.jpeg',
+    img_url: '/Bilder/06.jpeg',
+  },
+]
 
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
+
+const isGitHubPages = () => window.location.hostname.endsWith('github.io')
+
+const getPublicAssetOrigin = () => (isGitHubPages() ? productionOrigin : '')
+
+const getApiUrls = () => (isGitHubPages() ? [productionApiUrl] : [sameOriginApiUrl, productionApiUrl])
+
+const getArtworkList = (data) => {
+  if (Array.isArray(data)) {
+    return data
+  }
+
+  if (Array.isArray(data?.artworks)) {
+    return data.artworks
+  }
+
+  if (Array.isArray(data?.data)) {
+    return data.data
+  }
+
+  return []
+}
 
 const getArtworkImageUrl = (imgUrl) => {
   if (!isFilled(imgUrl)) {
@@ -10,24 +41,25 @@ const getArtworkImageUrl = (imgUrl) => {
   }
 
   const normalizedUrl = String(imgUrl).trim()
+  const assetOrigin = getPublicAssetOrigin()
 
   if (/^https?:\/\//i.test(normalizedUrl)) {
-    return normalizedUrl.replace(/^http:\/\/nema\.one/i, `${window.location.protocol}//nema.one`)
+    return normalizedUrl.replace(/^http:\/\/nema\.one/i, productionOrigin)
   }
 
   if (normalizedUrl.startsWith('/')) {
-    return normalizedUrl
+    return `${assetOrigin}${normalizedUrl}`
   }
 
   if (normalizedUrl.startsWith('www/')) {
-    return `/${normalizedUrl.slice(4)}`
+    return `${assetOrigin}/${normalizedUrl.slice(4)}`
   }
 
   if (!normalizedUrl.includes('/')) {
-    return `/Bilder/${normalizedUrl}`
+    return `${assetOrigin}/Bilder/${normalizedUrl}`
   }
 
-  return `/${normalizedUrl}`
+  return `${assetOrigin}/${normalizedUrl}`
 }
 
 function Artworks({ labels }) {
@@ -41,17 +73,20 @@ function Artworks({ labels }) {
       setStatus('loading')
 
       try {
-        const response = await fetch(apiUrl, { signal: controller.signal })
+        const apiResponses = await Promise.all(
+          getApiUrls().map((apiUrl) =>
+            fetch(apiUrl, { signal: controller.signal })
+              .then((response) => (response.ok ? response.json() : null))
+              .catch(() => null),
+          ),
+        )
 
-        if (!response.ok) {
-          throw new Error(`Artwork API returned ${response.status}`)
-        }
+        const artworkList = apiResponses.flatMap(getArtworkList)
+        const visibleArtworkList =
+          artworkList.length > 0 || !isGitHubPages() ? artworkList : githubPagesFallbackArtworks
 
-        const data = await response.json()
-        const artworkList = Array.isArray(data) ? data : []
-
-        setArtworks(artworkList)
-        setStatus(artworkList.length > 0 ? 'ready' : 'empty')
+        setArtworks(visibleArtworkList)
+        setStatus(visibleArtworkList.length > 0 ? 'ready' : 'empty')
       } catch (error) {
         if (error.name !== 'AbortError') {
           setArtworks([])
