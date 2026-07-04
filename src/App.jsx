@@ -1,53 +1,6 @@
 import { useEffect, useState } from 'react'
-
-const translations = {
-  de: {
-    languageName: 'Deutsch',
-    shortName: 'DE',
-    switchLabel: 'Sprache auswählen',
-    eyebrow: 'NEMA.one',
-    headline: 'Herzlich Willkommen!',
-    intro:
-      'Dies ist deine zweisprachige Startseite. Wähle oben im Header Deutsch oder Englisch und die Inhalte passen sich sofort an.',
-    cta: 'Los geht’s',
-  },
-  en: {
-    languageName: 'English',
-    shortName: 'EN',
-    switchLabel: 'Select language',
-    eyebrow: 'NEMA.one',
-    headline: 'Welcome!',
-    intro:
-      'This is your bilingual homepage. Choose German or English in the header and the content updates instantly.',
-    cta: 'Get started',
-  },
-}
-
-const getSavedLanguage = () => {
-  try {
-    return window.localStorage.getItem('language')
-  } catch {
-    return null
-  }
-}
-
-const saveLanguage = (language) => {
-  try {
-    window.localStorage.setItem('language', language)
-  } catch {
-    // The language switcher still works for the current visit if storage is blocked.
-  }
-}
-
-const getInitialLanguage = () => {
-  const savedLanguage = getSavedLanguage()
-
-  if (savedLanguage && translations[savedLanguage]) {
-    return savedLanguage
-  }
-
-  return navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en'
-}
+import { getInitialLanguage, saveLanguage } from './languageStorage.js'
+import translations from './translations.js'
 
 function App() {
   const [language, setLanguage] = useState(getInitialLanguage)

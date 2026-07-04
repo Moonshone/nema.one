@@ -5,78 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="nema.one - Moderne React Website" />
     <title>nema.one</title>
-    <style>
-      :root {
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #17351f;
-        background: #f2ffe4;
-      }
-
-      body {
-        margin: 0;
-        min-width: 320px;
-        min-height: 100vh;
-        overflow-x: hidden;
-      }
-
-      .staticHomePage {
-        display: grid;
-        min-height: 100vh;
-        min-height: 100svh;
-        place-items: center;
-        padding: clamp(16px, 4vw, 32px);
-        text-align: center;
-      }
-
-      .staticHomePage .heroCard {
-        width: min(100%, 760px);
-        padding: clamp(28px, 8vw, 80px);
-        border: 1px solid rgba(23, 53, 31, 0.12);
-        border-radius: clamp(22px, 5vw, 32px);
-        background: rgba(255, 255, 255, 0.48);
-        box-shadow: 0 24px 80px rgba(23, 53, 31, 0.12);
-      }
-
-      .staticHomePage .eyebrow {
-        margin: 0 0 18px;
-        font-size: 0.9rem;
-        font-weight: 800;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-      }
-
-      .staticHomePage h1 {
-        margin: 0;
-        overflow-wrap: anywhere;
-        font-size: clamp(2.4rem, 12vw, 7rem);
-        line-height: 1;
-        letter-spacing: -0.06em;
-      }
-
-      .staticHomePage .intro {
-        max-width: 600px;
-        margin: 24px auto 0;
-        color: #3d5a44;
-        font-size: clamp(1.05rem, 2.5vw, 1.35rem);
-        line-height: 1.6;
-      }
-
-      @media (max-width: 520px) {
-        .staticHomePage .heroCard {
-          box-shadow: 0 16px 48px rgba(23, 53, 31, 0.1);
-        }
-      }
-
-      @media (max-width: 360px) {
-        .staticHomePage {
-          padding-inline: 12px;
-        }
-
-        .staticHomePage .heroCard {
-          padding-inline: 20px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
     <div id="root">

@@ -53,6 +53,11 @@ button {
   text-align: center;
 }
 
+.staticHomePage {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
 .heroCard {
   width: min(100%, 760px);
   padding: clamp(28px, 8vw, 80px);
@@ -189,7 +194,8 @@ h1 {
 }
 
 @media (max-width: 360px) {
-  .homePage {
+  .homePage,
+  .staticHomePage {
     padding-inline: 12px;
   }
 
