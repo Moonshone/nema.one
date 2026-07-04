@@ -4,12 +4,7 @@ const translations = {
   de: {
     languageName: 'Deutsch',
     shortName: 'DE',
-    logoLabel: 'NEMA.one Startseite',
     switchLabel: 'Sprache auswählen',
-    navLabel: 'Hauptnavigation',
-    navigation: {
-      home: 'Startseite',
-    },
     eyebrow: 'NEMA.one',
     headline: 'Herzlich Willkommen!',
     intro:
@@ -19,12 +14,7 @@ const translations = {
   en: {
     languageName: 'English',
     shortName: 'EN',
-    logoLabel: 'NEMA.one homepage',
     switchLabel: 'Select language',
-    navLabel: 'Main navigation',
-    navigation: {
-      home: 'Home',
-    },
     eyebrow: 'NEMA.one',
     headline: 'Welcome!',
     intro:
@@ -65,21 +55,13 @@ function App() {
 
   useEffect(() => {
     document.documentElement.lang = language
-    document.title = `nema.one | ${content.navigation.home}`
+    document.title = `nema.one | ${content.headline}`
     saveLanguage(language)
-  }, [content.navigation.home, language])
+  }, [content.headline, language])
 
   return (
     <div className="siteShell">
       <header className="siteHeader">
-        <a className="brand" href="./" aria-label={content.logoLabel}>
-          NEMA.one
-        </a>
-
-        <nav className="mainNav" aria-label={content.navLabel}>
-          <a href="./">{content.navigation.home}</a>
-        </nav>
-
         <div className="languageSwitcher" aria-label={content.switchLabel}>
           {Object.entries(translations).map(([code, translation]) => (
             <button
