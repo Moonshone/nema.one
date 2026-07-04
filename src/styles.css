@@ -46,17 +46,17 @@ button {
 
 .homePage {
   display: grid;
-  min-height: calc(100vh - 82px);
-  min-height: calc(100svh - 82px);
-  place-items: center;
-  gap: clamp(28px, 6vw, 72px);
-  padding: clamp(16px, 4vw, 32px);
+  align-content: start;
+  justify-items: center;
+  gap: clamp(24px, 5vw, 56px);
+  padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 32px);
   text-align: center;
 }
 
 .staticHomePage {
   min-height: 100vh;
   min-height: 100svh;
+  place-items: center;
 }
 
 .heroCard {
@@ -257,7 +257,6 @@ h2 {
   }
 
   .homePage {
-    min-height: auto;
     padding-top: clamp(24px, 8vw, 40px);
     padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
