@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
 const productionOrigin = 'https://nema.one'
+const productionAssetOrigin = 'http://nema.one'
 const sameOriginApiUrl = '/api/get-artworks.php'
 const productionApiUrl = `${productionOrigin}/api/get-artworks.php`
 const githubPagesFallbackArtworks = [
   {
     id: 'github-pages-fallback-06',
-    name: '06.jpeg',
-    img_url: '/Bilder/06.jpeg',
+    img_url: `${productionAssetOrigin}/Bilder/06.jpeg`,
   },
 ]
 
@@ -15,7 +15,7 @@ const isFilled = (value) => value !== null && value !== undefined && String(valu
 
 const isGitHubPages = () => window.location.hostname.endsWith('github.io')
 
-const getPublicAssetOrigin = () => (isGitHubPages() ? productionOrigin : '')
+const getPublicAssetOrigin = () => (isGitHubPages() ? productionAssetOrigin : '')
 
 const getApiUrls = () => (isGitHubPages() ? [productionApiUrl] : [sameOriginApiUrl, productionApiUrl])
 
@@ -44,7 +44,7 @@ const getArtworkImageUrl = (imgUrl) => {
   const assetOrigin = getPublicAssetOrigin()
 
   if (/^https?:\/\//i.test(normalizedUrl)) {
-    return normalizedUrl.replace(/^http:\/\/nema\.one/i, productionOrigin)
+    return normalizedUrl
   }
 
   if (normalizedUrl.startsWith('/')) {
@@ -103,12 +103,7 @@ function Artworks({ labels }) {
   }, [])
 
   return (
-    <section className="artworksSection" id="artworks" aria-labelledby="artworks-heading">
-      <div className="sectionHeader">
-        <p className="eyebrow">{labels.eyebrow}</p>
-        <h2 id="artworks-heading">{labels.heading}</h2>
-      </div>
-
+    <section className="artworksSection" id="artworks" aria-label={labels.sectionLabel}>
       {status === 'loading' && <p className="artworksMessage">{labels.loading}</p>}
       {status === 'empty' && <p className="artworksMessage">Aktuell sind keine Kunstwerke vorhanden.</p>}
       {status === 'error' && <p className="artworksMessage">Die Kunstwerke konnten nicht geladen werden.</p>}

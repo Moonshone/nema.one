@@ -9,9 +9,9 @@ function App() {
 
   useEffect(() => {
     document.documentElement.lang = language
-    document.title = `nema.one | ${content.headline}`
+    document.title = `nema.one | ${content.artworks.heading}`
     saveLanguage(language)
-  }, [content.headline, language])
+  }, [content.artworks.heading, language])
 
   return (
     <div className="siteShell">
@@ -33,15 +33,6 @@ function App() {
       </header>
 
       <main className="homePage">
-        <section className="heroCard" aria-labelledby="welcome-heading">
-          <p className="eyebrow">{content.eyebrow}</p>
-          <h1 id="welcome-heading">{content.headline}</h1>
-          <p className="intro">{content.intro}</p>
-          <a className="primaryLink" href="mailto:hello@nema.one">
-            {content.cta}
-          </a>
-        </section>
-
         <Artworks labels={content.artworks} />
       </main>
     </div>
