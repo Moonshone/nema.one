@@ -14,6 +14,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 a {
@@ -27,60 +28,42 @@ button {
 
 .siteShell {
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 .siteHeader {
   position: sticky;
   top: 0;
   z-index: 10;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
-  gap: 24px;
-  width: min(100% - 32px, 1120px);
+  justify-content: flex-end;
+  width: min(100% - clamp(32px, 6vw, 64px), 1120px);
   margin: 0 auto;
-  padding: 18px 0;
+  padding: clamp(12px, 2.5vw, 18px) 0;
   backdrop-filter: blur(18px);
-}
-
-.brand {
-  justify-self: start;
-  font-size: 1.1rem;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-}
-
-.mainNav {
-  justify-self: center;
-  color: #3d5a44;
-  font-weight: 700;
-}
-
-.mainNav a {
-  display: inline-flex;
-  border-radius: 999px;
-  padding: 10px 14px;
-}
-
-.mainNav a:hover,
-.mainNav a:focus-visible {
-  background: rgba(23, 53, 31, 0.08);
-  outline: none;
 }
 
 .homePage {
   display: grid;
-  min-height: calc(100vh - 82px);
-  place-items: center;
-  padding: 24px;
+  align-content: start;
+  justify-items: center;
+  gap: clamp(24px, 5vw, 56px);
+  padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 32px);
   text-align: center;
+}
+
+.staticHomePage {
+  min-height: 100vh;
+  min-height: 100svh;
+  place-items: center;
 }
 
 .heroCard {
   width: min(100%, 760px);
-  padding: clamp(32px, 8vw, 80px);
+  padding: clamp(28px, 8vw, 80px);
   border: 1px solid rgba(23, 53, 31, 0.12);
-  border-radius: 32px;
+  border-radius: clamp(22px, 5vw, 32px);
   background: rgba(255, 255, 255, 0.48);
   box-shadow: 0 24px 80px rgba(23, 53, 31, 0.12);
 }
@@ -95,9 +78,17 @@ button {
 
 h1 {
   margin: 0;
-  font-size: clamp(3rem, 10vw, 7rem);
+  overflow-wrap: anywhere;
+  font-size: clamp(2.4rem, 12vw, 7rem);
   line-height: 1;
   letter-spacing: -0.06em;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
 .intro {
@@ -110,6 +101,8 @@ h1 {
 
 .primaryLink {
   display: inline-flex;
+  justify-content: center;
+  min-width: min(100%, 150px);
   margin-top: 34px;
   border-radius: 999px;
   padding: 14px 22px;
@@ -126,9 +119,9 @@ h1 {
 }
 
 .languageSwitcher {
-  justify-self: end;
   display: inline-flex;
   gap: 6px;
+  max-width: 100%;
   padding: 5px;
   border: 1px solid rgba(23, 53, 31, 0.16);
   border-radius: 999px;
@@ -142,7 +135,7 @@ h1 {
   cursor: pointer;
   border: 0;
   border-radius: 999px;
-  padding: 10px 14px;
+  padding: clamp(9px, 1.8vw, 10px) clamp(12px, 2vw, 14px);
   color: #17351f;
   background: transparent;
   font-weight: 800;
@@ -170,26 +163,119 @@ h1 {
   font-size: 0.95rem;
 }
 
+.artworksSection {
+  width: min(100%, 1120px);
+  padding: clamp(28px, 6vw, 56px);
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: clamp(22px, 5vw, 32px);
+  background: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 18px 60px rgba(23, 53, 31, 0.1);
+}
+
+.sectionHeader {
+  margin: 0 auto clamp(22px, 4vw, 34px);
+}
+
+.artworksMessage {
+  margin: 0;
+  color: #3d5a44;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 700;
+}
+
+.artworksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  text-align: left;
+}
+
+.artworkCard {
+  overflow: hidden;
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
+}
+
+.artworkImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(23, 53, 31, 0.08);
+}
+
+.artworkContent {
+  padding: clamp(18px, 4vw, 24px);
+}
+
+.artworkContent h3 {
+  margin: 0;
+  color: #17351f;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.artworkMeta {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.artworkMeta div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.artworkMeta dt {
+  color: #17351f;
+  font-weight: 800;
+}
+
+.artworkMeta dt::after {
+  content: ':';
+}
+
+.artworkMeta dd {
+  margin: 0;
+  color: #3d5a44;
+}
+
+.artworkDescription {
+  margin: 18px 0 0;
+  color: #3d5a44;
+  line-height: 1.6;
+}
+
 @media (max-width: 720px) {
   .siteHeader {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    justify-items: center;
-  }
-
-  .brand,
-  .mainNav,
-  .languageSwitcher {
-    justify-self: center;
+    justify-content: center;
+    width: min(100% - 32px, 520px);
   }
 
   .homePage {
-    min-height: auto;
-    padding-top: 40px;
+    padding-top: clamp(24px, 8vw, 40px);
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 520px) {
+  .siteHeader {
+    position: static;
+  }
+
+  .heroCard {
+    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.1);
+  }
+
+  .artworksSection {
+    padding-inline: 20px;
+    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.08);
+  }
+
   .languageSwitcher {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -203,5 +289,16 @@ h1 {
 
   .languageName {
     display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .homePage,
+  .staticHomePage {
+    padding-inline: 12px;
+  }
+
+  .heroCard {
+    padding-inline: 20px;
   }
 }
