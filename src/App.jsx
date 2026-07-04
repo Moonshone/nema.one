@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Artworks from './Artworks.jsx'
 import { getInitialLanguage, saveLanguage } from './languageStorage.js'
 import translations from './translations.js'
 
@@ -40,6 +41,8 @@ function App() {
             {content.cta}
           </a>
         </section>
+
+        <Artworks labels={content.artworks} />
       </main>
     </div>
   )

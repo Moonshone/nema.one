@@ -49,6 +49,7 @@ button {
   min-height: calc(100vh - 82px);
   min-height: calc(100svh - 82px);
   place-items: center;
+  gap: clamp(28px, 6vw, 72px);
   padding: clamp(16px, 4vw, 32px);
   text-align: center;
 }
@@ -81,6 +82,13 @@ h1 {
   font-size: clamp(2.4rem, 12vw, 7rem);
   line-height: 1;
   letter-spacing: -0.06em;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
 .intro {
@@ -155,6 +163,93 @@ h1 {
   font-size: 0.95rem;
 }
 
+.artworksSection {
+  width: min(100%, 1120px);
+  padding: clamp(28px, 6vw, 56px);
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: clamp(22px, 5vw, 32px);
+  background: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 18px 60px rgba(23, 53, 31, 0.1);
+}
+
+.sectionHeader {
+  margin: 0 auto clamp(22px, 4vw, 34px);
+}
+
+.artworksMessage {
+  margin: 0;
+  color: #3d5a44;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 700;
+}
+
+.artworksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  text-align: left;
+}
+
+.artworkCard {
+  overflow: hidden;
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
+}
+
+.artworkImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(23, 53, 31, 0.08);
+}
+
+.artworkContent {
+  padding: clamp(18px, 4vw, 24px);
+}
+
+.artworkContent h3 {
+  margin: 0;
+  color: #17351f;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.artworkMeta {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.artworkMeta div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.artworkMeta dt {
+  color: #17351f;
+  font-weight: 800;
+}
+
+.artworkMeta dt::after {
+  content: ':';
+}
+
+.artworkMeta dd {
+  margin: 0;
+  color: #3d5a44;
+}
+
+.artworkDescription {
+  margin: 18px 0 0;
+  color: #3d5a44;
+  line-height: 1.6;
+}
+
 @media (max-width: 720px) {
   .siteHeader {
     justify-content: center;
@@ -175,6 +270,11 @@ h1 {
 
   .heroCard {
     box-shadow: 0 16px 48px rgba(23, 53, 31, 0.1);
+  }
+
+  .artworksSection {
+    padding-inline: 20px;
+    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.08);
   }
 
   .languageSwitcher {
