@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
 
     steps:
       - name: Repository herunterladen
@@ -31,7 +33,7 @@ jobs:
 
       - name: FTP-Servernamen prüfen
         env:
-          FTP_SERVER_RAW: ${{ secrets.FTP_SERVER }}
+          FTP_SERVER_RAW: ${{ secrets.FTP_SERVER || secrets.FTP_HOST || secrets.FTP }}
         run: |
           python - <<'PY'
           import os
@@ -48,6 +50,9 @@ jobs:
 
           if not ftp_host:
               sys.exit('FTP_SERVER secret must contain a hostname, for example ftp.example.com without a path.')
+
+          if ftp_host.lower() in {'name', 'hostname', 'host', 'ftp'}:
+              sys.exit('FTP_SERVER must be the real FTP server hostname from your hosting provider, not a placeholder like name or hostname.')
 
           with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as github_env:
               github_env.write(f'FTP_SERVER_HOST={ftp_host}\n')
