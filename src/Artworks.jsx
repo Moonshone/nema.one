@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 const productionOrigin = 'https://nema.one'
-const productionAssetOrigin = 'https://nema.one'
+const productionAssetOrigin = 'http://nema.one'
 const sameOriginApiUrl = '/api/get-artworks.php'
 const productionApiUrl = `${productionOrigin}/api/get-artworks.php`
 const githubPagesFallbackArtworks = [
@@ -44,7 +44,7 @@ const getArtworkImageUrl = (imgUrl) => {
   const assetOrigin = getPublicAssetOrigin()
 
   if (/^https?:\/\//i.test(normalizedUrl)) {
-    return normalizedUrl.replace(/^http:\/\/nema\.one/i, productionAssetOrigin)
+    return normalizedUrl.replace(/^https:\/\/nema\.one/i, productionAssetOrigin)
   }
 
   if (normalizedUrl.startsWith('/')) {
@@ -120,6 +120,7 @@ function Artworks({ labels }) {
                     alt={isFilled(artwork.name) ? artwork.name : labels.imageAlt}
                     className="artworkImage"
                     loading="lazy"
+                    referrerPolicy="no-referrer"
                     src={imageUrl}
                   />
                 )}
