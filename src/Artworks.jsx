@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 
 const productionOrigin = 'https://nema.one'
-const productionAssetOrigin = 'http://nema.one'
+const productionAssetOrigin = 'https://nema.one'
+const fallbackImagePath = '/Bilder/06.jpeg'
 const sameOriginApiUrl = '/api/get-artworks.php'
 const productionApiUrl = `${productionOrigin}/api/get-artworks.php`
 const githubPagesFallbackArtworks = [
   {
     id: 'github-pages-fallback-06',
-    img_url: `${productionAssetOrigin}/Bilder/06.jpeg`,
+    img_url: fallbackImagePath,
   },
 ]
 
@@ -44,7 +45,7 @@ const getArtworkImageUrl = (imgUrl) => {
   const assetOrigin = getPublicAssetOrigin()
 
   if (/^https?:\/\//i.test(normalizedUrl)) {
-    return normalizedUrl.replace(/^https:\/\/nema\.one/i, productionAssetOrigin)
+    return normalizedUrl.replace(/^http:\/\/nema\.one/i, productionAssetOrigin)
   }
 
   if (normalizedUrl.startsWith('/')) {
@@ -60,6 +61,14 @@ const getArtworkImageUrl = (imgUrl) => {
   }
 
   return `${assetOrigin}/${normalizedUrl}`
+}
+
+const getHttpFallbackImageUrl = (imageUrl) => {
+  if (!isFilled(imageUrl)) {
+    return ''
+  }
+
+  return String(imageUrl).replace(/^https:\/\/nema\.one/i, 'http://nema.one')
 }
 
 function Artworks({ labels }) {
@@ -120,6 +129,18 @@ function Artworks({ labels }) {
                     alt={isFilled(artwork.name) ? artwork.name : labels.imageAlt}
                     className="artworkImage"
                     loading="lazy"
+                    onError={(event) => {
+                      if (event.currentTarget.dataset.httpFallbackApplied === 'true') {
+                        return
+                      }
+
+                      const httpFallbackImageUrl = getHttpFallbackImageUrl(imageUrl)
+
+                      if (httpFallbackImageUrl !== imageUrl) {
+                        event.currentTarget.dataset.httpFallbackApplied = 'true'
+                        event.currentTarget.src = httpFallbackImageUrl
+                      }
+                    }}
                     referrerPolicy="no-referrer"
                     src={imageUrl}
                   />
