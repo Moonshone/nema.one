@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 const buildTimeSupabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL
 const buildTimeSupabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const storageBucket =
+  import.meta.env.VITE_SUPABASE_STORAGE_BUCKET ?? import.meta.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET ?? 'Bilder'
 
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
@@ -105,6 +107,7 @@ const getArtistImageUrls = (artist, supabaseUrl) => {
 
   if (firstPathPart && remainingPath) {
     return uniqueValues([
+      `${normalizedSupabaseUrl}/storage/v1/object/public/${storageBucket}/${normalizedImageUrl}`,
       `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${remainingPath}`,
       `${normalizedSupabaseUrl}/storage/v1/object/public/${firstPathPart}/${remainingPath}`,
       `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${normalizedImageUrl}`,
@@ -112,7 +115,10 @@ const getArtistImageUrls = (artist, supabaseUrl) => {
     ])
   }
 
-  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`]
+  return uniqueValues([
+    `${normalizedSupabaseUrl}/storage/v1/object/public/${storageBucket}/${normalizedImageUrl}`,
+    `${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`,
+  ])
 }
 
 const useNextArtistImageUrl = (event, imageUrls) => {
