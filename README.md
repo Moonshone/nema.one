@@ -82,10 +82,12 @@ Für die Tabelle `artists` kann `img_url` entweder eine vollständige Bild-URL e
 Artists/Laleh/01.jpeg
 ```
 
-Dieser Pfad wird automatisch zu folgender öffentlicher Supabase-Storage-URL normalisiert:
+Dieser Pfad wird automatisch zu öffentlichen Supabase-Storage-URLs normalisiert. Die App probiert mehrere Kandidaten, damit sowohl Bucket-Namen als auch Ordner-Pfade funktionieren, zum Beispiel:
 
 ```text
+https://your-project-ref.supabase.co/storage/v1/object/public/artists/Laleh/01.jpeg
 https://your-project-ref.supabase.co/storage/v1/object/public/Artists/Laleh/01.jpeg
+https://your-project-ref.supabase.co/storage/v1/object/public/artists/Artists/Laleh/01.jpeg
 ```
 
-Der Storage-Bucket muss dafür öffentlich lesbar sein oder eine passende Storage-Policy besitzen.
+Der passende Storage-Bucket muss dafür öffentlich lesbar sein oder eine passende Storage-Policy besitzen.

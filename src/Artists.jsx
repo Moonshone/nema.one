@@ -66,31 +66,66 @@ const getArtistsApiUrl = (supabaseUrl) => {
 const getArtistName = (artist) =>
   [artist.name, artist.full_name, artist.artist, artist.title].find(isFilled) ?? ''
 
-const getArtistImageUrl = (artist, supabaseUrl) => {
+const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
+
+const getArtistImageUrls = (artist, supabaseUrl) => {
   const imageUrl =
     [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
       isFilled,
     ) ?? ''
 
   if (!isFilled(imageUrl)) {
-    return ''
+    return []
   }
 
   const normalizedImageUrl = String(imageUrl).trim()
 
-  if (/^https?:\/\//i.test(normalizedImageUrl) || !isFilled(supabaseUrl)) {
-    return normalizedImageUrl
+  if (/^https?:\/\//i.test(normalizedImageUrl)) {
+    return [normalizedImageUrl]
   }
 
+  if (!isFilled(supabaseUrl)) {
+    return [normalizedImageUrl]
+  }
+
+  const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl)
+
   if (normalizedImageUrl.startsWith('/')) {
-    return `${normalizeSupabaseUrl(supabaseUrl)}${normalizedImageUrl}`
+    return [`${normalizedSupabaseUrl}${normalizedImageUrl}`]
   }
 
   if (normalizedImageUrl.startsWith('storage/v1/')) {
-    return `${normalizeSupabaseUrl(supabaseUrl)}/${normalizedImageUrl}`
+    return [`${normalizedSupabaseUrl}/${normalizedImageUrl}`]
   }
 
-  return `${normalizeSupabaseUrl(supabaseUrl)}/storage/v1/object/public/${normalizedImageUrl}`
+  const pathParts = normalizedImageUrl.split('/').filter(Boolean)
+  const firstPathPart = pathParts[0]
+  const remainingPath = pathParts.slice(1).join('/')
+  const lowerCaseBucket = firstPathPart?.toLowerCase()
+
+  if (firstPathPart && remainingPath) {
+    return uniqueValues([
+      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${remainingPath}`,
+      `${normalizedSupabaseUrl}/storage/v1/object/public/${firstPathPart}/${remainingPath}`,
+      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${normalizedImageUrl}`,
+      `${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`,
+    ])
+  }
+
+  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`]
+}
+
+const useNextArtistImageUrl = (event, imageUrls) => {
+  const currentIndex = Number(event.currentTarget.dataset.imageUrlIndex ?? 0)
+  const nextIndex = currentIndex + 1
+  const nextImageUrl = imageUrls[nextIndex]
+
+  if (!nextImageUrl) {
+    return
+  }
+
+  event.currentTarget.dataset.imageUrlIndex = String(nextIndex)
+  event.currentTarget.src = nextImageUrl
 }
 
 function Artists({ labels }) {
@@ -110,7 +145,7 @@ function Artists({ labels }) {
           setArtists(
             runtimeArtists.artists.map((artist) => ({
               ...artist,
-              imageUrl: getArtistImageUrl(artist, runtimeArtists.supabaseUrl),
+              imageUrls: getArtistImageUrls(artist, runtimeArtists.supabaseUrl),
             })),
           )
           setStatus(runtimeArtists.artists.length > 0 ? 'ready' : 'empty')
@@ -144,7 +179,7 @@ function Artists({ labels }) {
         setArtists(
           artistList.map((artist) => ({
             ...artist,
-            imageUrl: getArtistImageUrl(artist, supabaseUrl),
+            imageUrls: getArtistImageUrls(artist, supabaseUrl),
           })),
         )
         setStatus(artistList.length > 0 ? 'ready' : 'empty')
@@ -181,13 +216,15 @@ function Artists({ labels }) {
 
             return (
               <article className="artistCard" key={artist.id ?? artistName}>
-                {isFilled(artist.imageUrl) && (
+                {artist.imageUrls?.length > 0 && (
                   <img
                     alt={isFilled(artistName) ? artistName : labels.imageAlt}
                     className="artistImage"
+                    data-image-url-index="0"
                     loading="lazy"
+                    onError={(event) => useNextArtistImageUrl(event, artist.imageUrls)}
                     referrerPolicy="no-referrer"
-                    src={artist.imageUrl}
+                    src={artist.imageUrls[0]}
                   />
                 )}
 
