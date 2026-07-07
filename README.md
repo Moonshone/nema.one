@@ -55,3 +55,21 @@ SUPABASE_ANON_KEY=your-public-anon-key
 ```
 
 Nach dem Setzen oder Ändern der Variablen muss das Vercel-Projekt neu deployed werden.
+
+### Wenn die Seite „keine Künstler vorhanden“ zeigt
+
+Wenn `/api/supabase-config` Werte zurückgibt, aber die Seite trotzdem „Aktuell sind keine Künstler vorhanden.“ zeigt, liefert die Supabase-Abfrage ein leeres Array. Häufige Ursache ist Row Level Security auf der Tabelle `artists` ohne öffentliche `SELECT`-Policy.
+
+Sichere Lösung für Vercel:
+
+```text
+SUPABASE_SERVICE_ROLE_KEY=your-private-service-role-key
+```
+
+Dieser Key wird nur in der Vercel Serverless Function `/api/artists` verwendet und nicht an den Browser ausgeliefert. Danach das Vercel-Projekt neu deployen.
+
+Optional kann der Tabellenname angepasst werden:
+
+```text
+SUPABASE_ARTISTS_TABLE=artists
+```

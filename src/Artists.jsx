@@ -26,6 +26,22 @@ const getRuntimeSupabaseConfig = async (signal) => {
   }
 }
 
+
+const getRuntimeArtists = async (signal) => {
+  const response = await fetch('/api/artists', { signal })
+
+  if (!response.ok) {
+    return null
+  }
+
+  const data = await response.json()
+
+  return {
+    artists: Array.isArray(data.artists) ? data.artists : [],
+    supabaseUrl: data.supabaseUrl ?? '',
+  }
+}
+
 const getSupabaseConfig = async (signal) => {
   if (isFilled(buildTimeSupabaseUrl) && isFilled(buildTimeSupabaseAnonKey)) {
     return {
@@ -84,6 +100,19 @@ function Artists({ labels }) {
       setStatus('loading')
 
       try {
+        const runtimeArtists = await getRuntimeArtists(controller.signal)
+
+        if (runtimeArtists) {
+          setArtists(
+            runtimeArtists.artists.map((artist) => ({
+              ...artist,
+              imageUrl: getArtistImageUrl(artist, runtimeArtists.supabaseUrl),
+            })),
+          )
+          setStatus(runtimeArtists.artists.length > 0 ? 'ready' : 'empty')
+          return
+        }
+
         const { supabaseUrl, supabaseAnonKey } = await getSupabaseConfig(controller.signal)
         const apiUrl = getArtistsApiUrl(supabaseUrl)
 
