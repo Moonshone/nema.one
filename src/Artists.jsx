@@ -1,14 +1,43 @@
 import { useEffect, useState } from 'react'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey =
+const buildTimeSupabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL
+const buildTimeSupabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
 const normalizeSupabaseUrl = (url) => String(url).replace(/\/$/, '')
 
-const getArtistsApiUrl = () => {
+const getRuntimeSupabaseConfig = async (signal) => {
+  const response = await fetch('/api/supabase-config', { signal })
+
+  if (!response.ok) {
+    return {
+      supabaseUrl: '',
+      supabaseAnonKey: '',
+    }
+  }
+
+  const config = await response.json()
+
+  return {
+    supabaseUrl: config.supabaseUrl ?? '',
+    supabaseAnonKey: config.supabaseAnonKey ?? '',
+  }
+}
+
+const getSupabaseConfig = async (signal) => {
+  if (isFilled(buildTimeSupabaseUrl) && isFilled(buildTimeSupabaseAnonKey)) {
+    return {
+      supabaseUrl: buildTimeSupabaseUrl,
+      supabaseAnonKey: buildTimeSupabaseAnonKey,
+    }
+  }
+
+  return getRuntimeSupabaseConfig(signal)
+}
+
+const getArtistsApiUrl = (supabaseUrl) => {
   if (!isFilled(supabaseUrl)) {
     return ''
   }
@@ -21,7 +50,7 @@ const getArtistsApiUrl = () => {
 const getArtistName = (artist) =>
   [artist.name, artist.full_name, artist.artist, artist.title].find(isFilled) ?? ''
 
-const getArtistImageUrl = (artist) => {
+const getArtistImageUrl = (artist, supabaseUrl) => {
   const imageUrl =
     [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
       isFilled,
@@ -54,15 +83,16 @@ function Artists({ labels }) {
     const loadArtists = async () => {
       setStatus('loading')
 
-      const apiUrl = getArtistsApiUrl()
-
-      if (!isFilled(apiUrl) || !isFilled(supabaseAnonKey)) {
-        setArtists([])
-        setStatus('missingConfig')
-        return
-      }
-
       try {
+        const { supabaseUrl, supabaseAnonKey } = await getSupabaseConfig(controller.signal)
+        const apiUrl = getArtistsApiUrl(supabaseUrl)
+
+        if (!isFilled(apiUrl) || !isFilled(supabaseAnonKey)) {
+          setArtists([])
+          setStatus('missingConfig')
+          return
+        }
+
         const response = await fetch(apiUrl, {
           headers: {
             apikey: supabaseAnonKey,
@@ -78,7 +108,12 @@ function Artists({ labels }) {
         const data = await response.json()
         const artistList = Array.isArray(data) ? data : []
 
-        setArtists(artistList)
+        setArtists(
+          artistList.map((artist) => ({
+            ...artist,
+            imageUrl: getArtistImageUrl(artist, supabaseUrl),
+          })),
+        )
         setStatus(artistList.length > 0 ? 'ready' : 'empty')
       } catch (error) {
         if (error.name !== 'AbortError') {
@@ -110,17 +145,16 @@ function Artists({ labels }) {
         <div className="artistsGrid">
           {artists.map((artist) => {
             const artistName = getArtistName(artist)
-            const imageUrl = getArtistImageUrl(artist)
 
             return (
               <article className="artistCard" key={artist.id ?? artistName}>
-                {isFilled(imageUrl) && (
+                {isFilled(artist.imageUrl) && (
                   <img
                     alt={isFilled(artistName) ? artistName : labels.imageAlt}
                     className="artistImage"
                     loading="lazy"
                     referrerPolicy="no-referrer"
-                    src={imageUrl}
+                    src={artist.imageUrl}
                   />
                 )}
 

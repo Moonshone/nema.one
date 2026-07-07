@@ -47,4 +47,11 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
 ```
 
+Für die Vercel Runtime-API `/api/supabase-config` werden zusätzlich diese Namen unterstützt:
+
+```text
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_ANON_KEY=your-public-anon-key
+```
+
 Nach dem Setzen oder Ändern der Variablen muss das Vercel-Projekt neu deployed werden.
