@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
 
     steps:
       - name: Repository herunterladen
@@ -21,7 +23,18 @@ jobs:
       - name: Pakete installieren
         run: npm install
 
+      - name: Supabase-Konfiguration prüfen
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$VITE_SUPABASE_URL"
+          test -n "$VITE_SUPABASE_ANON_KEY"
+
       - name: Projekt bauen
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Build prüfen
@@ -29,11 +42,70 @@ jobs:
           test -f dist/index.html
           find dist -maxdepth 2 -type f
 
+      - name: FTP-Secrets prüfen
+        env:
+          FTP_SERVER_RAW: ${{ secrets.FTP_SERVER || secrets.FTP_HOST || secrets.FTP }}
+          FTP_USERNAME_RAW: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD_RAW: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+          from urllib.parse import urlparse
+
+          errors = []
+          raw_server = os.environ.get('FTP_SERVER_RAW', '').strip()
+          raw_username = os.environ.get('FTP_USERNAME_RAW', '').strip()
+          raw_password = os.environ.get('FTP_PASSWORD_RAW', '').strip()
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+
+          if not raw_server:
+              errors.append('Missing FTP host secret. Add one of: FTP_SERVER, FTP_HOST, or FTP.')
+
+          if not raw_username:
+              errors.append('Missing FTP username secret: FTP_USERNAME.')
+
+          if not raw_password:
+              errors.append('Missing FTP password secret: FTP_PASSWORD.')
+
+          ftp_host = ''
+
+          if raw_server:
+              parsed = urlparse(raw_server if '://' in raw_server else f'//{raw_server}')
+              ftp_host = parsed.hostname or raw_server.split('/')[0].split(':')[0]
+
+              if not ftp_host:
+                  errors.append('FTP host secret must contain a hostname, for example ftp.example.com without a path.')
+              elif ftp_host.lower() in {'name', 'hostname', 'host', 'ftp'}:
+                  errors.append('FTP host secret must be the real FTP server hostname from your hosting provider, not a placeholder like name or hostname.')
+
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as summary:
+                  summary.write('## FTP deploy secret check\n\n')
+                  summary.write(f'- FTP host secret present: {"yes" if raw_server else "no"}\n')
+                  summary.write(f'- FTP username secret present: {"yes" if raw_username else "no"}\n')
+                  summary.write(f'- FTP password secret present: {"yes" if raw_password else "no"}\n')
+                  if ftp_host:
+                      summary.write(f'- Normalized FTP hostname length: {len(ftp_host)} characters\n')
+                  if errors:
+                      summary.write('\n### Required fix\n')
+                      for error in errors:
+                          summary.write(f'- {error}\n')
+
+          if errors:
+              sys.exit('FTP deploy secrets are incomplete or invalid. See the workflow summary for details.')
+
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as github_env:
+              github_env.write(f'FTP_SERVER_HOST={ftp_host}\n')
+
+          print(f'FTP server hostname normalized ({len(ftp_host)} characters).')
+          PY
+
       - name: Build per FTP hochladen
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ env.FTP_SERVER_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /httpdocs/
+          server-dir: /www/
