@@ -86,7 +86,11 @@ const getArtistImageUrl = (artist, supabaseUrl) => {
     return `${normalizeSupabaseUrl(supabaseUrl)}${normalizedImageUrl}`
   }
 
-  return normalizedImageUrl
+  if (normalizedImageUrl.startsWith('storage/v1/')) {
+    return `${normalizeSupabaseUrl(supabaseUrl)}/${normalizedImageUrl}`
+  }
+
+  return `${normalizeSupabaseUrl(supabaseUrl)}/storage/v1/object/public/${normalizedImageUrl}`
 }
 
 function Artists({ labels }) {

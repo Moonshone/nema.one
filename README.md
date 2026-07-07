@@ -73,3 +73,19 @@ Optional kann der Tabellenname angepasst werden:
 ```text
 SUPABASE_ARTISTS_TABLE=artists
 ```
+
+### Künstlerbilder aus Supabase Storage
+
+Für die Tabelle `artists` kann `img_url` entweder eine vollständige Bild-URL enthalten oder einen Supabase-Storage-Pfad im Format:
+
+```text
+Artists/Laleh/01.jpeg
+```
+
+Dieser Pfad wird automatisch zu folgender öffentlicher Supabase-Storage-URL normalisiert:
+
+```text
+https://your-project-ref.supabase.co/storage/v1/object/public/Artists/Laleh/01.jpeg
+```
+
+Der Storage-Bucket muss dafür öffentlich lesbar sein oder eine passende Storage-Policy besitzen.
