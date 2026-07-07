@@ -91,3 +91,5 @@ https://your-project-ref.supabase.co/storage/v1/object/public/artists/Artists/La
 ```
 
 Der passende Storage-Bucket muss dafür öffentlich lesbar sein oder eine passende Storage-Policy besitzen.
+
+Wenn `SUPABASE_SERVICE_ROLE_KEY` in Vercel gesetzt ist, erzeugt `/api/artists` zusätzlich signierte Supabase-Storage-URLs für die Künstlerbilder. Dadurch können Bilder auch dann geladen werden, wenn der Bucket nicht direkt öffentlich erreichbar ist, solange der Service Role Key korrekt gesetzt ist.

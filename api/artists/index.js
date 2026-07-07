@@ -2,6 +2,111 @@ const getEnvValue = (...names) => names.map((name) => process.env[name]).find(Bo
 
 const normalizeSupabaseUrl = (url) => String(url).replace(/\/$/, '')
 
+const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
+
+const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
+
+const getArtistImagePath = (artist) =>
+  [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
+    isFilled,
+  ) ?? ''
+
+const getStoragePathCandidates = (imagePath) => {
+  if (!isFilled(imagePath) || /^https?:\/\//i.test(imagePath)) {
+    return []
+  }
+
+  const normalizedImagePath = String(imagePath).trim().replace(/^\//, '')
+  const pathParts = normalizedImagePath.split('/').filter(Boolean)
+  const firstPathPart = pathParts[0]
+  const remainingPath = pathParts.slice(1).join('/')
+  const lowerCaseBucket = firstPathPart?.toLowerCase()
+
+  if (!firstPathPart || !remainingPath) {
+    return []
+  }
+
+  return uniqueValues([
+    { bucket: lowerCaseBucket, path: remainingPath },
+    { bucket: firstPathPart, path: remainingPath },
+    { bucket: lowerCaseBucket, path: normalizedImagePath },
+    { bucket: firstPathPart, path: normalizedImagePath },
+  ])
+}
+
+const getPublicImageUrlCandidates = (supabaseUrl, imagePath) => {
+  if (!isFilled(imagePath)) {
+    return []
+  }
+
+  const normalizedImagePath = String(imagePath).trim()
+  const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl)
+
+  if (/^https?:\/\//i.test(normalizedImagePath)) {
+    return [normalizedImagePath]
+  }
+
+  if (normalizedImagePath.startsWith('/')) {
+    return [`${normalizedSupabaseUrl}${normalizedImagePath}`]
+  }
+
+  if (normalizedImagePath.startsWith('storage/v1/')) {
+    return [`${normalizedSupabaseUrl}/${normalizedImagePath}`]
+  }
+
+  return getStoragePathCandidates(normalizedImagePath).map(
+    ({ bucket, path }) => `${normalizedSupabaseUrl}/storage/v1/object/public/${bucket}/${path}`,
+  )
+}
+
+const getSignedImageUrl = async ({ supabaseUrl, supabaseKey, bucket, path }) => {
+  const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl)
+  const signUrl = `${normalizedSupabaseUrl}/storage/v1/object/sign/${encodeURIComponent(bucket)}/${path
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/')}`
+
+  const signResponse = await fetch(signUrl, {
+    body: JSON.stringify({ expiresIn: 60 * 60 * 24 }),
+    headers: {
+      apikey: supabaseKey,
+      Authorization: `Bearer ${supabaseKey}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  })
+
+  if (!signResponse.ok) {
+    return ''
+  }
+
+  const signData = await signResponse.json()
+  const signedUrl = signData.signedURL ?? signData.signedUrl ?? ''
+
+  if (!isFilled(signedUrl)) {
+    return ''
+  }
+
+  if (/^https?:\/\//i.test(signedUrl)) {
+    return signedUrl
+  }
+
+  return signedUrl.startsWith('/storage/v1')
+    ? `${normalizedSupabaseUrl}${signedUrl}`
+    : `${normalizedSupabaseUrl}/storage/v1${signedUrl}`
+}
+
+const getImageUrls = async ({ artist, supabaseUrl, supabaseKey }) => {
+  const imagePath = getArtistImagePath(artist)
+  const publicImageUrls = getPublicImageUrlCandidates(supabaseUrl, imagePath)
+  const storagePathCandidates = getStoragePathCandidates(imagePath)
+  const signedImageUrls = await Promise.all(
+    storagePathCandidates.map((candidate) => getSignedImageUrl({ ...candidate, supabaseUrl, supabaseKey })),
+  )
+
+  return uniqueValues([...signedImageUrls, ...publicImageUrls])
+}
+
 export default async function handler(request, response) {
   const supabaseUrl = getEnvValue('VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_URL')
   const supabaseKey = getEnvValue(
@@ -47,8 +152,15 @@ export default async function handler(request, response) {
       return
     }
 
+    const artistsWithImageUrls = await Promise.all(
+      (Array.isArray(artists) ? artists : []).map(async (artist) => ({
+        ...artist,
+        imageUrls: await getImageUrls({ artist, supabaseKey, supabaseUrl }),
+      })),
+    )
+
     response.status(200).json({
-      artists: Array.isArray(artists) ? artists : [],
+      artists: artistsWithImageUrls,
       supabaseUrl,
     })
   } catch (error) {
