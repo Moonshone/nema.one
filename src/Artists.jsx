@@ -10,6 +10,13 @@ const isFilled = (value) => value !== null && value !== undefined && String(valu
 
 const normalizeSupabaseUrl = (url) => String(url).replace(/\/$/, '')
 
+const encodeStoragePath = (path) =>
+  String(path)
+    .split('/')
+    .filter(Boolean)
+    .map((part) => encodeURIComponent(part))
+    .join('/')
+
 const getRuntimeSupabaseConfig = async (signal) => {
   const response = await fetch('/api/supabase-config', { signal })
 
@@ -27,7 +34,6 @@ const getRuntimeSupabaseConfig = async (signal) => {
     supabaseAnonKey: config.supabaseAnonKey ?? '',
   }
 }
-
 
 const getRuntimeArtists = async (signal) => {
   const response = await fetch('/api/artists', { signal })
@@ -70,11 +76,23 @@ const getArtistName = (artist) =>
 
 const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
 
+const getArtistImageValue = (artist) =>
+  [
+    artist.img_url,
+    artist.image_url,
+    artist['image-url'],
+    artist.imageUrl,
+    artist.avatar_url,
+    artist.photo_url,
+    artist.profile_image_url,
+    artist.profile_image,
+    artist.picture,
+    artist.photo,
+    artist.image,
+  ].find(isFilled) ?? ''
+
 const getArtistImageUrls = (artist, supabaseUrl) => {
-  const imageUrl =
-    [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
-      isFilled,
-    ) ?? ''
+  const imageUrl = getArtistImageValue(artist)
 
   if (!isFilled(imageUrl)) {
     return []
@@ -91,34 +109,43 @@ const getArtistImageUrls = (artist, supabaseUrl) => {
   }
 
   const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl)
+  const publicStorageBase = `${normalizedSupabaseUrl}/storage/v1/object/public`
 
-  if (normalizedImageUrl.startsWith('/')) {
-    return [`${normalizedSupabaseUrl}${normalizedImageUrl}`]
-  }
+  const normalizedPath = normalizedImageUrl
+    .replace(/^\/+/, '')
+    .replace(/^storage\/v1\/object\/public\//i, '')
+    .replace(/^object\/public\//i, '')
+    .replace(/^public\//i, '')
 
-  if (normalizedImageUrl.startsWith('storage/v1/')) {
-    return [`${normalizedSupabaseUrl}/${normalizedImageUrl}`]
-  }
-
-  const pathParts = normalizedImageUrl.split('/').filter(Boolean)
+  const bucketCandidates = uniqueValues([storageBucket, String(storageBucket).toLowerCase()])
+  const pathParts = normalizedPath.split('/').filter(Boolean)
   const firstPathPart = pathParts[0]
   const remainingPath = pathParts.slice(1).join('/')
-  const lowerCaseBucket = firstPathPart?.toLowerCase()
 
-  if (firstPathPart && remainingPath) {
-    return uniqueValues([
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${storageBucket}/${normalizedImageUrl}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${remainingPath}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${firstPathPart}/${remainingPath}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${normalizedImageUrl}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`,
-    ])
+  const imageCandidates = []
+
+  const addPublicUrl = (path) => {
+    if (isFilled(path)) {
+      imageCandidates.push(`${publicStorageBase}/${encodeStoragePath(path)}`)
+    }
   }
 
-  return uniqueValues([
-    `${normalizedSupabaseUrl}/storage/v1/object/public/${storageBucket}/${normalizedImageUrl}`,
-    `${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`,
-  ])
+  bucketCandidates.forEach((bucket) => {
+    if (normalizedPath === bucket || normalizedPath.startsWith(`${bucket}/`)) {
+      addPublicUrl(normalizedPath)
+    } else {
+      addPublicUrl(`${bucket}/${normalizedPath}`)
+    }
+  })
+
+  if (firstPathPart && remainingPath) {
+    addPublicUrl(`${firstPathPart}/${remainingPath}`)
+    addPublicUrl(`${String(firstPathPart).toLowerCase()}/${remainingPath}`)
+  }
+
+  addPublicUrl(normalizedPath)
+
+  return uniqueValues(imageCandidates)
 }
 
 const useNextArtistImageUrl = (event, imageUrls) => {
