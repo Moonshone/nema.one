@@ -63,7 +63,9 @@ Wenn `/api/supabase-config` Werte zurückgibt, aber die Seite trotzdem „Aktuel
 Sichere Lösung für Vercel:
 
 ```text
-SUPABASE_SERVICE_ROLE_KEY=your-private-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=your-private-service-role-or-secret-key
+# or
+SUPABASE_SECRET_KEY=your-private-sb-secret-key
 ```
 
 Dieser Key wird nur in der Vercel Serverless Function `/api/artists` verwendet und nicht an den Browser ausgeliefert. Danach das Vercel-Projekt neu deployen.
@@ -92,4 +94,4 @@ https://your-project-ref.supabase.co/storage/v1/object/public/artists/Artists/La
 
 Der passende Storage-Bucket muss dafür öffentlich lesbar sein oder eine passende Storage-Policy besitzen.
 
-Wenn `SUPABASE_SERVICE_ROLE_KEY` in Vercel gesetzt ist, erzeugt `/api/artists` zusätzlich signierte Supabase-Storage-URLs für die Künstlerbilder. Dadurch können Bilder auch dann geladen werden, wenn der Bucket nicht direkt öffentlich erreichbar ist, solange der Service Role Key korrekt gesetzt ist.
+Wenn `SUPABASE_SERVICE_ROLE_KEY` oder `SUPABASE_SECRET_KEY` in Vercel gesetzt ist, erzeugt `/api/artists` zusätzlich signierte Supabase-Storage-URLs für die Künstlerbilder. Dadurch können Bilder auch dann geladen werden, wenn der Bucket nicht direkt öffentlich erreichbar ist, solange der Service Role Key korrekt gesetzt ist.

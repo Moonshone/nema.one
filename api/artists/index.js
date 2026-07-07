@@ -111,6 +111,7 @@ export default async function handler(request, response) {
   const supabaseUrl = getEnvValue('VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_URL')
   const supabaseKey = getEnvValue(
     'SUPABASE_SERVICE_ROLE_KEY',
+    'SUPABASE_SECRET_KEY',
     'VITE_SUPABASE_ANON_KEY',
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
     'SUPABASE_ANON_KEY',
