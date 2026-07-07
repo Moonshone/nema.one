@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Artworks from './Artworks.jsx'
+import Artists from './Artists.jsx'
 import { getInitialLanguage, saveLanguage } from './languageStorage.js'
 import translations from './translations.js'
 
@@ -9,9 +9,9 @@ function App() {
 
   useEffect(() => {
     document.documentElement.lang = language
-    document.title = `nema.one | ${content.artworks.heading}`
+    document.title = `nema.one | ${content.artists.heading}`
     saveLanguage(language)
-  }, [content.artworks.heading, language])
+  }, [content.artists.heading, language])
 
   return (
     <div className="siteShell">
@@ -33,7 +33,7 @@ function App() {
       </header>
 
       <main className="homePage">
-        <Artworks labels={content.artworks} />
+        <Artists labels={content.artists} />
       </main>
     </div>
   )

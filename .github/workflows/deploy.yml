@@ -23,7 +23,18 @@ jobs:
       - name: Pakete installieren
         run: npm install
 
+      - name: Supabase-Konfiguration prüfen
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$VITE_SUPABASE_URL"
+          test -n "$VITE_SUPABASE_ANON_KEY"
+
       - name: Projekt bauen
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
 
       - name: Build prüfen

@@ -302,3 +302,66 @@ h2 {
     padding-inline: 20px;
   }
 }
+
+.artistsSection {
+  width: min(100%, 1120px);
+  padding: clamp(28px, 6vw, 56px);
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: clamp(22px, 5vw, 32px);
+  background: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 18px 60px rgba(23, 53, 31, 0.1);
+}
+
+.artistsMessage {
+  margin: 0;
+  color: #3d5a44;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 700;
+}
+
+.artistsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  text-align: left;
+}
+
+.artistCard {
+  overflow: hidden;
+  border: 1px solid rgba(23, 53, 31, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
+}
+
+.artistImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(23, 53, 31, 0.08);
+}
+
+.artistContent {
+  padding: clamp(18px, 4vw, 24px);
+}
+
+.artistContent h2 {
+  margin: 0;
+  color: #17351f;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.artistContent p {
+  margin: 14px 0 0;
+  color: #3d5a44;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .artistsGrid {
+    grid-template-columns: 1fr;
+  }
+}
