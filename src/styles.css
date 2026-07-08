@@ -254,16 +254,32 @@ h1 {
 .artistsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 3vw, 24px);
+  justify-items: center;
+  gap: clamp(28px, 5vw, 44px);
   text-align: left;
 }
 
 .artistCard {
+  width: 80%;
   overflow: hidden;
   border: 1px solid rgba(23, 53, 31, 0.12);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.artistCard:hover,
+.artistCard:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 48px rgba(23, 53, 31, 0.12);
+}
+
+.artistCardLink {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
 }
 
 .artistImage {
@@ -276,6 +292,46 @@ h1 {
 
 .artistContent {
   padding: clamp(18px, 4vw, 24px);
+}
+
+.artistDetailSection {
+  display: grid;
+  gap: clamp(22px, 4vw, 36px);
+}
+
+.artistBackLink {
+  width: fit-content;
+  color: #17351f;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.artistBackLink:hover,
+.artistBackLink:focus-visible {
+  text-decoration: underline;
+}
+
+.artistDetailCard {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 48px);
+  align-items: start;
+}
+
+.artistDetailImage {
+  display: block;
+  width: 100%;
+  border-radius: 24px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(23, 53, 31, 0.08);
+}
+
+.artistDetailContent p {
+  margin: 18px 0 0;
+  color: #3d5a44;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.7;
 }
 
 .artistContent h2 {
@@ -303,6 +359,10 @@ h1 {
   }
 
   .artistsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .artistDetailCard {
     grid-template-columns: 1fr;
   }
 }

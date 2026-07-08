@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import ArtistDetail from './ArtistDetail.jsx'
 import Artists from './Artists.jsx'
 import { getInitialLanguage, saveLanguage } from './languageStorage.js'
 import translations from './translations.js'
@@ -21,6 +22,7 @@ function App() {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
   const languageSwitcherRef = useRef(null)
   const content = translations[language]
+  const isArtistDetailPage = window.location.pathname.startsWith('/artists/')
 
   useEffect(() => {
     document.documentElement.lang = language
@@ -88,7 +90,7 @@ function App() {
       </header>
 
       <main className="homePage">
-        <Artists labels={content.artists} />
+        {isArtistDetailPage ? <ArtistDetail labels={content.artists} /> : <Artists labels={content.artists} />}
       </main>
     </div>
   )
