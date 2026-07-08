@@ -2,6 +2,83 @@ export const isFilled = (value) => value !== null && value !== undefined && Stri
 
 const joinFilled = (...values) => values.filter(isFilled).map((value) => String(value).trim()).join(' ')
 
+const latinToPersianLetters = {
+  a: 'ا',
+  b: 'ب',
+  c: 'ک',
+  d: 'د',
+  e: 'ه',
+  f: 'ف',
+  g: 'گ',
+  h: 'ه',
+  i: 'ی',
+  j: 'ج',
+  k: 'ک',
+  l: 'ل',
+  m: 'م',
+  n: 'ن',
+  o: 'و',
+  p: 'پ',
+  q: 'ق',
+  r: 'ر',
+  s: 'س',
+  t: 'ت',
+  u: 'و',
+  v: 'و',
+  w: 'و',
+  x: 'کس',
+  y: 'ی',
+  z: 'ز',
+}
+
+const latinToPersianDigraphs = [
+  ['sch', 'ش'],
+  ['sh', 'ش'],
+  ['ch', 'چ'],
+  ['kh', 'خ'],
+  ['gh', 'غ'],
+  ['zh', 'ژ'],
+  ['ph', 'ف'],
+  ['th', 'ت'],
+  ['ck', 'ک'],
+]
+
+const transliterateLatinNameToPersian = (value) =>
+  String(value)
+    .split(/(\s+)/)
+    .map((part) => {
+      if (/^\s+$/.test(part) || /[^A-Za-zÀ-ž'-]/.test(part)) {
+        return part
+      }
+
+      const normalizedPart = part
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+
+      let persianPart = ''
+      let index = 0
+
+      while (index < normalizedPart.length) {
+        const digraph = latinToPersianDigraphs.find(([latin]) =>
+          normalizedPart.startsWith(latin, index),
+        )
+
+        if (digraph) {
+          persianPart += digraph[1]
+          index += digraph[0].length
+          continue
+        }
+
+        const character = normalizedPart[index]
+        persianPart += latinToPersianLetters[character] ?? character
+        index += 1
+      }
+
+      return persianPart
+    })
+    .join('')
+
 const getDefaultArtistName = (artist) =>
   [
     joinFilled(artist.Firstname, artist.Lastname),
@@ -46,8 +123,15 @@ const getPersianArtistName = (artist) =>
     artist.NameFa,
   ].find(isFilled) ?? ''
 
-export const getArtistName = (artist, language = 'de') =>
-  (language === 'fa' ? getPersianArtistName(artist) : '') || getDefaultArtistName(artist)
+export const getArtistName = (artist, language = 'de') => {
+  const defaultArtistName = getDefaultArtistName(artist)
+
+  if (language !== 'fa') {
+    return defaultArtistName
+  }
+
+  return getPersianArtistName(artist) || transliterateLatinNameToPersian(defaultArtistName)
+}
 
 const slugify = (value) =>
   String(value)
