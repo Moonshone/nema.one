@@ -60,11 +60,14 @@ function Artists({ labels }) {
                     />
                   )}
 
-                  <div className="artistContent">
-                    {isFilled(artistName) && <h2>{artistName}</h2>}
-                    {isFilled(artist.bio) && <p>{artist.bio}</p>}
-                    {isFilled(artist.description) && <p>{artist.description}</p>}
-                  </div>
+                  {isFilled(artistName) && <h2 className="artistCardName">{artistName}</h2>}
+
+                  {(isFilled(artist.bio) || isFilled(artist.description)) && (
+                    <div className="artistContent">
+                      {isFilled(artist.bio) && <p>{artist.bio}</p>}
+                      {isFilled(artist.description) && <p>{artist.description}</p>}
+                    </div>
+                  )}
                 </a>
               </article>
             )
