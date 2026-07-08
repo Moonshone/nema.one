@@ -2,59 +2,23 @@ export const isFilled = (value) => value !== null && value !== undefined && Stri
 
 const joinFilled = (...values) => values.filter(isFilled).map((value) => String(value).trim()).join(' ')
 
-const getDefaultArtistName = (artist) =>
-  [
-    joinFilled(artist.Firstname, artist.Lastname),
-    joinFilled(artist.firstname, artist.lastname),
-    joinFilled(artist.first_name, artist.last_name),
-    joinFilled(artist.firstName, artist.lastName),
-    artist.name,
-    artist.Name,
-    artist.full_name,
-    artist.fullName,
-    artist.display_name,
-    artist.displayName,
-    artist.artist_name,
-    artist.artistName,
-    artist.stage_name,
-    artist.stageName,
-    artist.artist,
-    artist.Artist,
-    artist.title,
-    artist.Title,
-  ].find(isFilled) ?? ''
+const pickFilled = (values) => values.find(isFilled) ?? ''
 
-const getPersianArtistName = (artist) =>
-  [
-    artist.name_persian,
-    joinFilled(artist.Firstname_fa, artist.Lastname_fa),
-    joinFilled(artist.FirstnameFa, artist.LastnameFa),
-    joinFilled(artist.firstname_fa, artist.lastname_fa),
-    joinFilled(artist.firstnameFa, artist.lastnameFa),
-    joinFilled(artist.first_name_fa, artist.last_name_fa),
-    joinFilled(artist.firstNameFa, artist.lastNameFa),
-    artist.full_name_fa,
-    artist.fullNameFa,
-    artist.display_name_fa,
-    artist.displayNameFa,
-    artist.artist_name_fa,
-    artist.artistNameFa,
-    artist.stage_name_fa,
-    artist.stageNameFa,
-    artist.name_fa,
-    artist.Name_fa,
-    artist.nameFa,
-    artist.NameFa,
-  ].find(isFilled) ?? ''
+const getDefaultArtistName = (artist) =>
+  pickFilled([
+    joinFilled(artist.Firstname, artist.Lastname),
+    artist.name,
+    artist.full_name,
+    artist.artist,
+    artist.title,
+  ])
+
+const getPersianArtistName = (artist) => pickFilled([artist.name_persian])
 
 export const getArtistName = (artist, language = 'de') => {
   const defaultArtistName = getDefaultArtistName(artist)
 
-  if (language !== 'fa') {
-    return defaultArtistName
-  }
-
-  return getPersianArtistName(artist) || defaultArtistName
+  return language === 'fa' ? getPersianArtistName(artist) || defaultArtistName : defaultArtistName
 }
 
 const slugify = (value) =>
@@ -67,10 +31,9 @@ const slugify = (value) =>
     .replace(/^-+|-+$/g, '')
 
 export const getArtistDetailPath = (artist) => {
-  const identifier = [artist.slug, artist.id, getArtistName(artist)].find(isFilled)
-  const slug = slugify(identifier || 'artist')
+  const identifier = pickFilled([artist.slug, artist.id, getDefaultArtistName(artist)])
 
-  return `/artists/${encodeURIComponent(slug)}`
+  return `/artists/${encodeURIComponent(slugify(identifier || 'artist'))}`
 }
 
 export const getRuntimeArtists = async (signal) => {

@@ -1,35 +1,8 @@
-import { useEffect, useState } from 'react'
-import { getArtistDetailPath, getArtistName, getRuntimeArtists, isFilled } from './artistUtils.js'
+import { getArtistDetailPath, getArtistName, isFilled } from './artistUtils.js'
+import useArtists from './useArtists.js'
 
 function Artists({ labels, language }) {
-  const [artists, setArtists] = useState([])
-  const [status, setStatus] = useState('loading')
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    const loadArtists = async () => {
-      setStatus('loading')
-
-      try {
-        const artistList = await getRuntimeArtists(controller.signal)
-
-        setArtists(artistList)
-        setStatus(artistList.length > 0 ? 'ready' : 'empty')
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          setArtists([])
-          setStatus('error')
-        }
-      }
-    }
-
-    loadArtists()
-
-    return () => {
-      controller.abort()
-    }
-  }, [])
+  const { artists, status } = useArtists()
 
   return (
     <section className="artistsSection" id="artists" aria-label={labels.sectionLabel}>
@@ -45,12 +18,13 @@ function Artists({ labels, language }) {
         <div className="artistsGrid">
           {artists.map((artist) => {
             const artistName = getArtistName(artist, language)
+            const detailPath = getArtistDetailPath(artist)
             const imageUrl = artist.imageUrls?.[0]
             const hasDescription = isFilled(artist.bio) || isFilled(artist.description)
 
             return (
               <article className="artistCardItem" key={artist.id ?? artistName}>
-                <a className="artistCard" href={getArtistDetailPath(artist)}>
+                <a className="artistCard" href={detailPath}>
                   {isFilled(imageUrl) && (
                     <img
                       alt={isFilled(artistName) ? artistName : labels.imageAlt}
@@ -71,7 +45,7 @@ function Artists({ labels, language }) {
 
                 {isFilled(artistName) && (
                   <h2 className="artistName">
-                    <a href={getArtistDetailPath(artist)}>{artistName}</a>
+                    <a href={detailPath}>{artistName}</a>
                   </h2>
                 )}
               </article>
