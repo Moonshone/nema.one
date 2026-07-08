@@ -27,6 +27,7 @@ button {
 }
 
 .siteHeader {
+  direction: ltr;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -54,7 +55,7 @@ button {
 
 .siteLogo img {
   display: block;
-  width: clamp(78px, 11.2vw, 118px);
+  width: clamp(72px, 10vw, 106px);
   height: auto;
 }
 
@@ -66,6 +67,7 @@ button {
 }
 
 .languageSwitcher {
+  direction: ltr;
   position: relative;
   display: inline-flex;
   max-width: 100%;
