@@ -1,14 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 576" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
   <title id="title">nema logo</title>
-  <desc id="desc">Stylized green eye above the word nema.</desc>
-  <g fill="#9aae89">
-    <path d="M512 105c-207 0-366 44-477 130 111 86 270 130 477 130s366-44 477-130c-111-86-270-130-477-130Zm0 31c184 0 327 34 429 99-102 65-245 99-429 99s-327-34-429-99c102-65 245-99 429-99Z"/>
-    <ellipse cx="512" cy="235" rx="123" ry="126"/>
-    <rect x="367" y="55" width="17" height="58" rx="8"/>
-    <rect x="203" y="82" width="17" height="64" rx="8" transform="rotate(-30 211.5 114)"/>
-    <rect x="536" y="53" width="17" height="71" rx="8" transform="rotate(31 544.5 88.5)"/>
-    <rect x="699" y="59" width="17" height="61" rx="8" transform="rotate(31 707.5 89.5)"/>
-    <rect x="810" y="82" width="17" height="64" rx="8" transform="rotate(30 818.5 114)"/>
+  <desc id="desc">Green nema wordmark with an eye symbol on a black background.</desc>
+  <rect width="1024" height="1024" fill="#000000"/>
+  <defs>
+    <linearGradient id="logoGreen" x1="220" y1="225" x2="830" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b7d3a5"/>
+      <stop offset="0.52" stop-color="#9fbd8f"/>
+      <stop offset="1" stop-color="#c1dab0"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#logoGreen)">
+    <path d="M153 401c89-95 205-142 359-142s270 47 359 142c-89 95-205 143-359 143s-270-48-359-143Zm54 0c81 61 183 91 305 91s224-30 305-91c-81-60-183-90-305-90s-224 30-305 90Z"/>
+    <circle cx="512" cy="401" r="96"/>
+    <rect x="504" y="214" width="17" height="54" rx="8.5"/>
+    <rect x="254" y="245" width="17" height="54" rx="8.5" transform="rotate(-30 262.5 272)"/>
+    <rect x="565" y="228" width="17" height="55" rx="8.5" transform="rotate(31 573.5 255.5)"/>
+    <rect x="706" y="229" width="17" height="57" rx="8.5" transform="rotate(31 714.5 257.5)"/>
+    <rect x="821" y="245" width="17" height="54" rx="8.5" transform="rotate(30 829.5 272)"/>
+    <path d="M128 528h53v191h-53V528Zm127 0c58 0 96 39 96 96v95h-53v-89c0-35-20-58-50-58-33 0-55 25-55 63v84h-53v-191h50v28c14-18 36-28 65-28Zm200 194c-61 0-104-40-104-99 0-56 42-97 100-97 59 0 96 40 96 101 0 7 0 13-1 18H405c7 23 25 36 52 36 22 0 39-8 54-24l29 31c-21 23-48 34-85 34Zm-50-115h91c-5-24-21-38-45-38-23 0-40 14-46 38Zm171-79h50v24c13-16 33-24 58-24 29 0 52 12 65 34 16-22 40-34 71-34 47 0 77 31 77 82v109h-53V621c0-31-15-49-42-49-28 0-46 20-46 54v93h-53v-98c0-31-16-49-42-49-28 0-46 20-46 54v93h-53V528Zm329 98c0-58 42-100 100-100 27 0 50 9 66 27v-25h50v191h-50v-25c-16 18-39 28-66 28-58 0-100-42-100-96Zm166 0c0-32-23-55-55-55s-55 23-55 55 23 55 55 55 55-23 55-55Z"/>
   </g>
-  <text x="88" y="556" fill="#9aae89" font-family="Inter, Arial, sans-serif" font-size="210" font-weight="900" letter-spacing="4">nema</text>
 </svg>
