@@ -60,7 +60,6 @@ function App() {
           >
             <LanguageFlag code={language} />
             <span className="languageShortName">{content.shortName}</span>
-            <span className="languageName">{content.languageName}</span>
             <span aria-hidden="true" className="languageMenuChevron">⌄</span>
           </button>
 
@@ -77,7 +76,6 @@ function App() {
                 >
                   <LanguageFlag code={code} />
                   <span className="languageShortName">{translation.shortName}</span>
-                  <span className="languageName">{translation.languageName}</span>
                 </button>
               ))}
             </div>

@@ -72,7 +72,7 @@ button {
 }
 
 .languageMenuButton {
-  min-width: 168px;
+  min-width: 104px;
   justify-content: space-between;
   border: 1px solid rgba(23, 53, 31, 0.16) !important;
   background: rgba(255, 255, 255, 0.76) !important;
@@ -202,9 +202,6 @@ button {
   letter-spacing: 0.08em;
 }
 
-.languageName {
-  font-size: 0.95rem;
-}
 
 .artistsSection {
   width: min(100%, 1120px);
@@ -222,7 +219,7 @@ button {
 h1 {
   margin: 0;
   overflow-wrap: anywhere;
-  font-size: clamp(2.4rem, 12vw, 7rem);
+  font-size: clamp(1.44rem, 7.2vw, 4.2rem);
   line-height: 1;
   letter-spacing: -0.06em;
 }
@@ -313,9 +310,6 @@ h1 {
     inset-inline: 0;
   }
 
-  .languageName {
-    display: none;
-  }
 }
 
 @media (max-width: 360px) {
