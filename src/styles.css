@@ -46,13 +46,9 @@ button {
 }
 
 .languageSwitcher {
+  position: relative;
   display: inline-flex;
-  gap: 6px;
   max-width: 100%;
-  padding: 5px;
-  border: 1px solid rgba(23, 53, 31, 0.16);
-  border-radius: 999px;
-  background: rgba(23, 53, 31, 0.06);
 }
 
 .languageSwitcher button {
@@ -75,10 +71,91 @@ button {
   outline: none;
 }
 
-.languageSwitcher button.active {
+.languageMenuButton {
+  min-width: 168px;
+  justify-content: space-between;
+  border: 1px solid rgba(23, 53, 31, 0.16) !important;
+  background: rgba(255, 255, 255, 0.76) !important;
+  box-shadow: 0 10px 30px rgba(23, 53, 31, 0.1);
+}
+
+.languageMenuButton:hover,
+.languageMenuButton:focus-visible {
+  background: #ffffff !important;
+}
+
+.languageMenuChevron {
+  margin-inline-start: auto;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.languageMenu {
+  position: absolute;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-end: 0;
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+  min-width: 100%;
+  padding: 6px;
+  border: 1px solid rgba(23, 53, 31, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 48px rgba(23, 53, 31, 0.18);
+  backdrop-filter: blur(18px);
+}
+
+.languageMenu button {
+  justify-content: flex-start;
+  width: 100%;
+  border-radius: 14px;
+  white-space: nowrap;
+}
+
+.languageMenu button.active {
   color: #f2ffe4;
   background: #17351f;
   box-shadow: 0 8px 24px rgba(23, 53, 31, 0.24);
+}
+
+.languageFlag {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 24px;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(23, 53, 31, 0.16);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.persianFlag {
+  position: relative;
+  display: block;
+  background: linear-gradient(to bottom, #239f40 0 33.33%, #ffffff 33.33% 66.66%, #da0000 66.66% 100%);
+}
+
+.persianFlagSun,
+.persianFlagLion {
+  position: absolute;
+  color: #d7a12a;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.persianFlagSun {
+  top: 4px;
+  left: 5px;
+  font-size: 7px;
+}
+
+.persianFlagLion {
+  top: 3px;
+  right: 4px;
+  font-size: 9px;
+  transform: scaleX(-1);
 }
 
 .languageShortName {
@@ -186,14 +263,15 @@ h1 {
   }
 
   .languageSwitcher {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     width: 100%;
   }
 
-  .languageSwitcher button {
-    justify-content: center;
+  .languageMenuButton {
     width: 100%;
+  }
+
+  .languageMenu {
+    inset-inline: 0;
   }
 
   .languageName {
