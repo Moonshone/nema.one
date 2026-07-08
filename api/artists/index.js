@@ -6,6 +6,8 @@ const isFilled = (value) => value !== null && value !== undefined && String(valu
 
 const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
 
+const artistStorageBucket = 'Bilder'
+
 const getArtistImagePath = (artist) =>
   [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
     isFilled,
@@ -16,22 +18,17 @@ const getStoragePathCandidates = (imagePath) => {
     return []
   }
 
-  const normalizedImagePath = String(imagePath).trim().replace(/^\//, '')
-  const pathParts = normalizedImagePath.split('/').filter(Boolean)
-  const firstPathPart = pathParts[0]
-  const remainingPath = pathParts.slice(1).join('/')
-  const lowerCaseBucket = firstPathPart?.toLowerCase()
+  const normalizedImagePath = String(imagePath).trim().replace(/^\/+/, '')
 
-  if (!firstPathPart || !remainingPath) {
+  if (!isFilled(normalizedImagePath) || normalizedImagePath.startsWith('storage/v1/')) {
     return []
   }
 
-  return uniqueValues([
-    { bucket: lowerCaseBucket, path: remainingPath },
-    { bucket: firstPathPart, path: remainingPath },
-    { bucket: lowerCaseBucket, path: normalizedImagePath },
-    { bucket: firstPathPart, path: normalizedImagePath },
-  ])
+  const pathWithoutBucket = normalizedImagePath.startsWith(`${artistStorageBucket}/`)
+    ? normalizedImagePath.slice(`${artistStorageBucket}/`.length)
+    : normalizedImagePath
+
+  return [{ bucket: artistStorageBucket, path: pathWithoutBucket }]
 }
 
 const getPublicImageUrlCandidates = (supabaseUrl, imagePath) => {
@@ -46,7 +43,7 @@ const getPublicImageUrlCandidates = (supabaseUrl, imagePath) => {
     return [normalizedImagePath]
   }
 
-  if (normalizedImagePath.startsWith('/')) {
+  if (normalizedImagePath.startsWith('/storage/v1/')) {
     return [`${normalizedSupabaseUrl}${normalizedImagePath}`]
   }
 
