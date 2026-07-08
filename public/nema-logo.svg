@@ -1,12 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
   <title id="title">nema logo</title>
-  <desc id="desc">Green nema wordmark with an eye symbol on a black background.</desc>
-  <rect width="1024" height="1024" fill="#000000"/>
+  <desc id="desc">Green nema wordmark with an eye symbol on a transparent background.</desc>
   <defs>
     <linearGradient id="logoGreen" x1="220" y1="225" x2="830" y2="780" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#b7d3a5"/>
-      <stop offset="0.52" stop-color="#9fbd8f"/>
-      <stop offset="1" stop-color="#c1dab0"/>
+      <stop offset="0" stop-color="#a9c79a"/>
+      <stop offset="0.52" stop-color="#92b284"/>
+      <stop offset="1" stop-color="#aecb9f"/>
     </linearGradient>
   </defs>
   <g fill="url(#logoGreen)">
