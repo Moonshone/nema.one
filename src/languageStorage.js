@@ -23,5 +23,5 @@ export const getInitialLanguage = () => {
     return savedLanguage
   }
 
-  return navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en'
+  return 'en'
 }
