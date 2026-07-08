@@ -46,10 +46,11 @@ function Artists({ labels }) {
           {artists.map((artist) => {
             const artistName = getArtistName(artist)
             const imageUrl = artist.imageUrls?.[0]
+            const hasDescription = isFilled(artist.bio) || isFilled(artist.description)
 
             return (
-              <article className="artistCard" key={artist.id ?? artistName}>
-                <a className="artistCardLink" href={getArtistDetailPath(artist)}>
+              <article className="artistCardItem" key={artist.id ?? artistName}>
+                <a className="artistCard" href={getArtistDetailPath(artist)}>
                   {isFilled(imageUrl) && (
                     <img
                       alt={isFilled(artistName) ? artistName : labels.imageAlt}
@@ -60,15 +61,19 @@ function Artists({ labels }) {
                     />
                   )}
 
-                  {isFilled(artistName) && <h2 className="artistCardName">{artistName}</h2>}
-
-                  {(isFilled(artist.bio) || isFilled(artist.description)) && (
+                  {hasDescription && (
                     <div className="artistContent">
                       {isFilled(artist.bio) && <p>{artist.bio}</p>}
                       {isFilled(artist.description) && <p>{artist.description}</p>}
                     </div>
                   )}
                 </a>
+
+                {isFilled(artistName) && (
+                  <h2 className="artistName">
+                    <a href={getArtistDetailPath(artist)}>{artistName}</a>
+                  </h2>
+                )}
               </article>
             )
           })}
