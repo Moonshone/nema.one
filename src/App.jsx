@@ -49,6 +49,10 @@ function App() {
   return (
     <div className="siteShell">
       <header className="siteHeader">
+        <a className="siteLogo" href="/" aria-label="nema home">
+          <img alt="nema" src="/nema-logo.svg" />
+        </a>
+
         <div className="languageSwitcher" ref={languageSwitcherRef}>
           <button
             aria-expanded={isLanguageMenuOpen}

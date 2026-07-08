@@ -31,11 +31,31 @@ button {
   top: 0;
   z-index: 10;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   width: min(100% - clamp(32px, 6vw, 64px), 1120px);
   margin: 0 auto;
   padding: clamp(12px, 2.5vw, 18px) 0;
   backdrop-filter: blur(18px);
+}
+
+.siteLogo {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border-radius: 14px;
+}
+
+.siteLogo:focus-visible {
+  outline: 3px solid rgba(23, 53, 31, 0.28);
+  outline-offset: 4px;
+}
+
+.siteLogo img {
+  display: block;
+  width: clamp(112px, 16vw, 168px);
+  height: auto;
 }
 
 .homePage {
@@ -274,7 +294,6 @@ h1 {
 
 @media (max-width: 720px) {
   .siteHeader {
-    justify-content: center;
     width: min(100% - 32px, 520px);
   }
 
@@ -298,12 +317,16 @@ h1 {
     box-shadow: 0 16px 48px rgba(23, 53, 31, 0.08);
   }
 
+  .siteLogo img {
+    width: 96px;
+  }
+
   .languageSwitcher {
-    width: 100%;
+    width: auto;
   }
 
   .languageMenuButton {
-    width: 100%;
+    min-width: 96px;
   }
 
   .languageMenu {

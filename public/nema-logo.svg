@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 576" role="img" aria-labelledby="title desc">
+  <title id="title">nema logo</title>
+  <desc id="desc">Stylized green eye above the word nema.</desc>
+  <g fill="#9aae89">
+    <path d="M512 105c-207 0-366 44-477 130 111 86 270 130 477 130s366-44 477-130c-111-86-270-130-477-130Zm0 31c184 0 327 34 429 99-102 65-245 99-429 99s-327-34-429-99c102-65 245-99 429-99Z"/>
+    <ellipse cx="512" cy="235" rx="123" ry="126"/>
+    <rect x="367" y="55" width="17" height="58" rx="8"/>
+    <rect x="203" y="82" width="17" height="64" rx="8" transform="rotate(-30 211.5 114)"/>
+    <rect x="536" y="53" width="17" height="71" rx="8" transform="rotate(31 544.5 88.5)"/>
+    <rect x="699" y="59" width="17" height="61" rx="8" transform="rotate(31 707.5 89.5)"/>
+    <rect x="810" y="82" width="17" height="64" rx="8" transform="rotate(30 818.5 114)"/>
+  </g>
+  <text x="88" y="556" fill="#9aae89" font-family="Inter, Arial, sans-serif" font-size="210" font-weight="900" letter-spacing="4">nema</text>
+</svg>
