@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getArtistDetailPath, getArtistName, getRuntimeArtists, isFilled } from './artistUtils.js'
 
-function Artists({ labels }) {
+function Artists({ labels, language }) {
   const [artists, setArtists] = useState([])
   const [status, setStatus] = useState('loading')
 
@@ -44,7 +44,7 @@ function Artists({ labels }) {
       {status === 'ready' && (
         <div className="artistsGrid">
           {artists.map((artist) => {
-            const artistName = getArtistName(artist)
+            const artistName = getArtistName(artist, language)
             const imageUrl = artist.imageUrls?.[0]
             const hasDescription = isFilled(artist.bio) || isFilled(artist.description)
 

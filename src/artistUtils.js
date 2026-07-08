@@ -2,7 +2,7 @@ export const isFilled = (value) => value !== null && value !== undefined && Stri
 
 const joinFilled = (...values) => values.filter(isFilled).map((value) => String(value).trim()).join(' ')
 
-export const getArtistName = (artist) =>
+const getDefaultArtistName = (artist) =>
   [
     joinFilled(artist.Firstname, artist.Lastname),
     joinFilled(artist.firstname, artist.lastname),
@@ -23,6 +23,31 @@ export const getArtistName = (artist) =>
     artist.title,
     artist.Title,
   ].find(isFilled) ?? ''
+
+const getPersianArtistName = (artist) =>
+  [
+    joinFilled(artist.Firstname_fa, artist.Lastname_fa),
+    joinFilled(artist.FirstnameFa, artist.LastnameFa),
+    joinFilled(artist.firstname_fa, artist.lastname_fa),
+    joinFilled(artist.firstnameFa, artist.lastnameFa),
+    joinFilled(artist.first_name_fa, artist.last_name_fa),
+    joinFilled(artist.firstNameFa, artist.lastNameFa),
+    artist.full_name_fa,
+    artist.fullNameFa,
+    artist.display_name_fa,
+    artist.displayNameFa,
+    artist.artist_name_fa,
+    artist.artistNameFa,
+    artist.stage_name_fa,
+    artist.stageNameFa,
+    artist.name_fa,
+    artist.Name_fa,
+    artist.nameFa,
+    artist.NameFa,
+  ].find(isFilled) ?? ''
+
+export const getArtistName = (artist, language = 'de') =>
+  (language === 'fa' ? getPersianArtistName(artist) : '') || getDefaultArtistName(artist)
 
 const slugify = (value) =>
   String(value)

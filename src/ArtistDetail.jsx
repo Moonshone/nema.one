@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getArtistDetailPath, getArtistName, getRuntimeArtists, isFilled } from './artistUtils.js'
 
-function ArtistDetail({ labels }) {
+function ArtistDetail({ labels, language }) {
   const [artists, setArtists] = useState([])
   const [status, setStatus] = useState('loading')
   const currentPath = window.location.pathname
@@ -37,7 +37,7 @@ function ArtistDetail({ labels }) {
     [artists, currentPath],
   )
 
-  const artistName = artist ? getArtistName(artist) : ''
+  const artistName = artist ? getArtistName(artist, language) : ''
   const imageUrl = artist?.imageUrls?.[0]
 
   return (

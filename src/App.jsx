@@ -90,7 +90,11 @@ function App() {
       </header>
 
       <main className="homePage">
-        {isArtistDetailPage ? <ArtistDetail labels={content.artists} /> : <Artists labels={content.artists} />}
+        {isArtistDetailPage ? (
+          <ArtistDetail labels={content.artists} language={language} />
+        ) : (
+          <Artists labels={content.artists} language={language} />
+        )}
       </main>
     </div>
   )
