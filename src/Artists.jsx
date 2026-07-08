@@ -1,51 +1,8 @@
-import { useEffect, useState } from 'react'
+import { getArtistDetailPath, getArtistName, isFilled } from './artistUtils.js'
+import useArtists from './useArtists.js'
 
-const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
-
-const getArtistName = (artist) =>
-  [artist.name, artist.full_name, artist.artist, artist.title].find(isFilled) ?? ''
-
-const getRuntimeArtists = async (signal) => {
-  const response = await fetch('/api/artists', { signal })
-
-  if (!response.ok) {
-    throw new Error(`Artists request failed with ${response.status}`)
-  }
-
-  const data = await response.json()
-
-  return Array.isArray(data.artists) ? data.artists : []
-}
-
-function Artists({ labels }) {
-  const [artists, setArtists] = useState([])
-  const [status, setStatus] = useState('loading')
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    const loadArtists = async () => {
-      setStatus('loading')
-
-      try {
-        const artistList = await getRuntimeArtists(controller.signal)
-
-        setArtists(artistList)
-        setStatus(artistList.length > 0 ? 'ready' : 'empty')
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          setArtists([])
-          setStatus('error')
-        }
-      }
-    }
-
-    loadArtists()
-
-    return () => {
-      controller.abort()
-    }
-  }, [])
+function Artists({ labels, language }) {
+  const { artists, status } = useArtists()
 
   return (
     <section className="artistsSection" id="artists" aria-label={labels.sectionLabel}>
@@ -60,26 +17,37 @@ function Artists({ labels }) {
       {status === 'ready' && (
         <div className="artistsGrid">
           {artists.map((artist) => {
-            const artistName = getArtistName(artist)
+            const artistName = getArtistName(artist, language)
+            const detailPath = getArtistDetailPath(artist)
             const imageUrl = artist.imageUrls?.[0]
+            const hasDescription = isFilled(artist.bio) || isFilled(artist.description)
 
             return (
-              <article className="artistCard" key={artist.id ?? artistName}>
-                {isFilled(imageUrl) && (
-                  <img
-                    alt={isFilled(artistName) ? artistName : labels.imageAlt}
-                    className="artistImage"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    src={imageUrl}
-                  />
-                )}
+              <article className="artistCardItem" key={artist.id ?? artistName}>
+                <a className="artistCard" href={detailPath}>
+                  {isFilled(imageUrl) && (
+                    <img
+                      alt={isFilled(artistName) ? artistName : labels.imageAlt}
+                      className="artistImage"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      src={imageUrl}
+                    />
+                  )}
 
-                <div className="artistContent">
-                  {isFilled(artistName) && <h2>{artistName}</h2>}
-                  {isFilled(artist.bio) && <p>{artist.bio}</p>}
-                  {isFilled(artist.description) && <p>{artist.description}</p>}
-                </div>
+                  {hasDescription && (
+                    <div className="artistContent">
+                      {isFilled(artist.bio) && <p>{artist.bio}</p>}
+                      {isFilled(artist.description) && <p>{artist.description}</p>}
+                    </div>
+                  )}
+                </a>
+
+                {isFilled(artistName) && (
+                  <h2 className="artistName">
+                    <a href={detailPath}>{artistName}</a>
+                  </h2>
+                )}
               </article>
             )
           })}
