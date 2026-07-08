@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 const buildTimeSupabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL
 const buildTimeSupabaseAnonKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const artistStorageBucket = 'Bilder'
 
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
@@ -69,10 +70,7 @@ const getArtistName = (artist) =>
 const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
 
 const getArtistImageUrls = (artist, supabaseUrl) => {
-  const imageUrl =
-    [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
-      isFilled,
-    ) ?? ''
+  const imageUrl = artist.img_url
 
   if (!isFilled(imageUrl)) {
     return []
@@ -89,30 +87,12 @@ const getArtistImageUrls = (artist, supabaseUrl) => {
   }
 
   const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl)
+  const normalizedPath = normalizedImageUrl.replace(/^\/+/, '')
+  const pathWithoutBucket = normalizedPath.startsWith(`${artistStorageBucket}/`)
+    ? normalizedPath.slice(`${artistStorageBucket}/`.length)
+    : normalizedPath
 
-  if (normalizedImageUrl.startsWith('/')) {
-    return [`${normalizedSupabaseUrl}${normalizedImageUrl}`]
-  }
-
-  if (normalizedImageUrl.startsWith('storage/v1/')) {
-    return [`${normalizedSupabaseUrl}/${normalizedImageUrl}`]
-  }
-
-  const pathParts = normalizedImageUrl.split('/').filter(Boolean)
-  const firstPathPart = pathParts[0]
-  const remainingPath = pathParts.slice(1).join('/')
-  const lowerCaseBucket = firstPathPart?.toLowerCase()
-
-  if (firstPathPart && remainingPath) {
-    return uniqueValues([
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${remainingPath}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${firstPathPart}/${remainingPath}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${lowerCaseBucket}/${normalizedImageUrl}`,
-      `${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`,
-    ])
-  }
-
-  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${normalizedImageUrl}`]
+  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${artistStorageBucket}/${pathWithoutBucket}`]
 }
 
 const useNextArtistImageUrl = (event, imageUrls) => {
