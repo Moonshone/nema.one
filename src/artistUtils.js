@@ -1,7 +1,28 @@
 export const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
+const joinFilled = (...values) => values.filter(isFilled).map((value) => String(value).trim()).join(' ')
+
 export const getArtistName = (artist) =>
-  [artist.name, artist.full_name, artist.artist, artist.title].find(isFilled) ?? ''
+  [
+    joinFilled(artist.Firstname, artist.Lastname),
+    joinFilled(artist.firstname, artist.lastname),
+    joinFilled(artist.first_name, artist.last_name),
+    joinFilled(artist.firstName, artist.lastName),
+    artist.name,
+    artist.Name,
+    artist.full_name,
+    artist.fullName,
+    artist.display_name,
+    artist.displayName,
+    artist.artist_name,
+    artist.artistName,
+    artist.stage_name,
+    artist.stageName,
+    artist.artist,
+    artist.Artist,
+    artist.title,
+    artist.Title,
+  ].find(isFilled) ?? ''
 
 const slugify = (value) =>
   String(value)
