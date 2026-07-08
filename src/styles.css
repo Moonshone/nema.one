@@ -290,8 +290,17 @@ h1 {
   background: rgba(23, 53, 31, 0.08);
 }
 
+.artistCardName {
+  margin: 0;
+  padding: clamp(14px, 3vw, 18px) clamp(18px, 4vw, 24px) 0;
+  color: #17351f;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
 .artistContent {
-  padding: clamp(18px, 4vw, 24px);
+  padding: clamp(10px, 2.5vw, 14px) clamp(18px, 4vw, 24px) clamp(18px, 4vw, 24px);
 }
 
 .artistDetailSection {
@@ -334,18 +343,14 @@ h1 {
   line-height: 1.7;
 }
 
-.artistContent h2 {
-  margin: 0;
-  color: #17351f;
-  font-size: clamp(1.3rem, 3vw, 1.7rem);
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-}
-
 .artistContent p {
-  margin: 14px 0 0;
+  margin: 0;
   color: #3d5a44;
   line-height: 1.6;
+}
+
+.artistContent p + p {
+  margin-top: 14px;
 }
 
 @media (max-width: 720px) {
