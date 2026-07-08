@@ -17,11 +17,6 @@ body {
   overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 button {
   font: inherit;
 }
@@ -36,7 +31,6 @@ button {
   top: 0;
   z-index: 10;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   width: min(100% - clamp(32px, 6vw, 64px), 1120px);
   margin: 0 auto;
@@ -46,76 +40,9 @@ button {
 
 .homePage {
   display: grid;
-  align-content: start;
   justify-items: center;
-  gap: clamp(24px, 5vw, 56px);
   padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 32px);
   text-align: center;
-}
-
-.staticHomePage {
-  min-height: 100vh;
-  min-height: 100svh;
-  place-items: center;
-}
-
-.heroCard {
-  width: min(100%, 760px);
-  padding: clamp(28px, 8vw, 80px);
-  border: 1px solid rgba(23, 53, 31, 0.12);
-  border-radius: clamp(22px, 5vw, 32px);
-  background: rgba(255, 255, 255, 0.48);
-  box-shadow: 0 24px 80px rgba(23, 53, 31, 0.12);
-}
-
-.eyebrow {
-  margin: 0 0 18px;
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-h1 {
-  margin: 0;
-  overflow-wrap: anywhere;
-  font-size: clamp(2.4rem, 12vw, 7rem);
-  line-height: 1;
-  letter-spacing: -0.06em;
-}
-
-h2 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.intro {
-  max-width: 600px;
-  margin: 24px auto 0;
-  color: #3d5a44;
-  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
-  line-height: 1.6;
-}
-
-.primaryLink {
-  display: inline-flex;
-  justify-content: center;
-  min-width: min(100%, 150px);
-  margin-top: 34px;
-  border-radius: 999px;
-  padding: 14px 22px;
-  color: #f2ffe4;
-  background: #17351f;
-  font-weight: 800;
-  box-shadow: 0 12px 30px rgba(23, 53, 31, 0.22);
-}
-
-.primaryLink:hover,
-.primaryLink:focus-visible {
-  background: #244a2e;
-  outline: none;
 }
 
 .languageSwitcher {
@@ -163,7 +90,7 @@ h2 {
   font-size: 0.95rem;
 }
 
-.artworksSection {
+.artistsSection {
   width: min(100%, 1120px);
   padding: clamp(28px, 6vw, 56px);
   border: 1px solid rgba(23, 53, 31, 0.12);
@@ -176,140 +103,12 @@ h2 {
   margin: 0 auto clamp(22px, 4vw, 34px);
 }
 
-.artworksMessage {
+h1 {
   margin: 0;
-  color: #3d5a44;
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  font-weight: 700;
-}
-
-.artworksGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: clamp(16px, 3vw, 24px);
-  text-align: left;
-}
-
-.artworkCard {
-  overflow: hidden;
-  border: 1px solid rgba(23, 53, 31, 0.12);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
-}
-
-.artworkImage {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: rgba(23, 53, 31, 0.08);
-}
-
-.artworkContent {
-  padding: clamp(18px, 4vw, 24px);
-}
-
-.artworkContent h3 {
-  margin: 0;
-  color: #17351f;
-  font-size: clamp(1.3rem, 3vw, 1.7rem);
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-}
-
-.artworkMeta {
-  display: grid;
-  gap: 10px;
-  margin: 18px 0 0;
-}
-
-.artworkMeta div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.artworkMeta dt {
-  color: #17351f;
-  font-weight: 800;
-}
-
-.artworkMeta dt::after {
-  content: ':';
-}
-
-.artworkMeta dd {
-  margin: 0;
-  color: #3d5a44;
-}
-
-.artworkDescription {
-  margin: 18px 0 0;
-  color: #3d5a44;
-  line-height: 1.6;
-}
-
-@media (max-width: 720px) {
-  .siteHeader {
-    justify-content: center;
-    width: min(100% - 32px, 520px);
-  }
-
-  .homePage {
-    padding-top: clamp(24px, 8vw, 40px);
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
-  }
-}
-
-@media (max-width: 520px) {
-  .siteHeader {
-    position: static;
-  }
-
-  .heroCard {
-    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.1);
-  }
-
-  .artworksSection {
-    padding-inline: 20px;
-    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.08);
-  }
-
-  .languageSwitcher {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-  }
-
-  .languageSwitcher button {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .languageName {
-    display: none;
-  }
-}
-
-@media (max-width: 360px) {
-  .homePage,
-  .staticHomePage {
-    padding-inline: 12px;
-  }
-
-  .heroCard {
-    padding-inline: 20px;
-  }
-}
-
-.artistsSection {
-  width: min(100%, 1120px);
-  padding: clamp(28px, 6vw, 56px);
-  border: 1px solid rgba(23, 53, 31, 0.12);
-  border-radius: clamp(22px, 5vw, 32px);
-  background: rgba(255, 255, 255, 0.36);
-  box-shadow: 0 18px 60px rgba(23, 53, 31, 0.1);
+  overflow-wrap: anywhere;
+  font-size: clamp(2.4rem, 12vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
 }
 
 .artistsMessage {
@@ -361,7 +160,49 @@ h2 {
 }
 
 @media (max-width: 720px) {
+  .siteHeader {
+    justify-content: center;
+    width: min(100% - 32px, 520px);
+  }
+
+  .homePage {
+    padding-top: clamp(24px, 8vw, 40px);
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
   .artistsGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .siteHeader {
+    position: static;
+  }
+
+  .artistsSection {
+    padding-inline: 20px;
+    box-shadow: 0 16px 48px rgba(23, 53, 31, 0.08);
+  }
+
+  .languageSwitcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .languageSwitcher button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .languageName {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .homePage {
+    padding-inline: 12px;
   }
 }
