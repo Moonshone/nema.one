@@ -1,21 +1,5 @@
 import { useEffect, useState } from 'react'
-
-const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
-
-const getArtistName = (artist) =>
-  [artist.name, artist.full_name, artist.artist, artist.title].find(isFilled) ?? ''
-
-const getRuntimeArtists = async (signal) => {
-  const response = await fetch('/api/artists', { signal })
-
-  if (!response.ok) {
-    throw new Error(`Artists request failed with ${response.status}`)
-  }
-
-  const data = await response.json()
-
-  return Array.isArray(data.artists) ? data.artists : []
-}
+import { getArtistDetailPath, getArtistName, getRuntimeArtists, isFilled } from './artistUtils.js'
 
 function Artists({ labels }) {
   const [artists, setArtists] = useState([])
@@ -62,24 +46,34 @@ function Artists({ labels }) {
           {artists.map((artist) => {
             const artistName = getArtistName(artist)
             const imageUrl = artist.imageUrls?.[0]
+            const hasDescription = isFilled(artist.bio) || isFilled(artist.description)
 
             return (
-              <article className="artistCard" key={artist.id ?? artistName}>
-                {isFilled(imageUrl) && (
-                  <img
-                    alt={isFilled(artistName) ? artistName : labels.imageAlt}
-                    className="artistImage"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    src={imageUrl}
-                  />
-                )}
+              <article className="artistCardItem" key={artist.id ?? artistName}>
+                <a className="artistCard" href={getArtistDetailPath(artist)}>
+                  {isFilled(imageUrl) && (
+                    <img
+                      alt={isFilled(artistName) ? artistName : labels.imageAlt}
+                      className="artistImage"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      src={imageUrl}
+                    />
+                  )}
 
-                <div className="artistContent">
-                  {isFilled(artistName) && <h2>{artistName}</h2>}
-                  {isFilled(artist.bio) && <p>{artist.bio}</p>}
-                  {isFilled(artist.description) && <p>{artist.description}</p>}
-                </div>
+                  {hasDescription && (
+                    <div className="artistContent">
+                      {isFilled(artist.bio) && <p>{artist.bio}</p>}
+                      {isFilled(artist.description) && <p>{artist.description}</p>}
+                    </div>
+                  )}
+                </a>
+
+                {isFilled(artistName) && (
+                  <h2 className="artistName">
+                    <a href={getArtistDetailPath(artist)}>{artistName}</a>
+                  </h2>
+                )}
               </article>
             )
           })}
