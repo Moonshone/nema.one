@@ -1,19 +1,17 @@
+const ARTIST_IMAGE_BUCKET = 'Bilder'
+const DEFAULT_ARTISTS_TABLE = 'artists'
+
 const getEnvValue = (...names) => names.map((name) => process.env[name]).find(Boolean) ?? ''
-
-const normalizeSupabaseUrl = (url) => String(url).replace(/\/$/, '')
-
 const isFilled = (value) => value !== null && value !== undefined && String(value).trim() !== ''
-
+const normalizeSupabaseUrl = (url) => String(url).replace(/\/$/, '')
 const uniqueValues = (values) => [...new Set(values.filter(isFilled))]
-
-const artistStorageBucket = 'Bilder'
 
 const getArtistImagePath = (artist) =>
   [artist.img_url, artist.image_url, artist.avatar_url, artist.photo_url, artist.picture, artist.image].find(
     isFilled,
   ) ?? ''
 
-const getArtistImageUrls = ({ artist, supabaseUrl }) => {
+const getArtistImageUrls = (artist, supabaseUrl) => {
   const imagePath = getArtistImagePath(artist)
 
   if (!isFilled(imagePath)) {
@@ -37,14 +35,20 @@ const getArtistImageUrls = ({ artist, supabaseUrl }) => {
   }
 
   const normalizedPath = normalizedImagePath.replace(/^\/+/, '')
-  const pathWithoutBucket = normalizedPath.startsWith(`${artistStorageBucket}/`)
-    ? normalizedPath.slice(`${artistStorageBucket}/`.length)
+  const pathWithoutBucket = normalizedPath.startsWith(`${ARTIST_IMAGE_BUCKET}/`)
+    ? normalizedPath.slice(`${ARTIST_IMAGE_BUCKET}/`.length)
     : normalizedPath
 
-  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${artistStorageBucket}/${pathWithoutBucket}`]
+  return [`${normalizedSupabaseUrl}/storage/v1/object/public/${ARTIST_IMAGE_BUCKET}/${pathWithoutBucket}`]
 }
 
-export default async function handler(request, response) {
+const getArtistsWithImageUrls = (artists, supabaseUrl) =>
+  artists.map((artist) => ({
+    ...artist,
+    imageUrls: uniqueValues([...(artist.imageUrls ?? []), ...getArtistImageUrls(artist, supabaseUrl)]),
+  }))
+
+export default async function handler(_request, response) {
   const supabaseUrl = getEnvValue('VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_URL')
   const supabaseKey = getEnvValue(
     'SUPABASE_SERVICE_ROLE_KEY',
@@ -53,7 +57,7 @@ export default async function handler(request, response) {
     'NEXT_PUBLIC_SUPABASE_ANON_KEY',
     'SUPABASE_ANON_KEY',
   )
-  const artistsTable = getEnvValue('SUPABASE_ARTISTS_TABLE') || 'artists'
+  const artistsTable = getEnvValue('SUPABASE_ARTISTS_TABLE') || DEFAULT_ARTISTS_TABLE
 
   response.setHeader('Cache-Control', 'no-store')
 
@@ -65,10 +69,9 @@ export default async function handler(request, response) {
     return
   }
 
-  const searchParams = new URLSearchParams({ select: '*' })
   const artistsUrl = `${normalizeSupabaseUrl(supabaseUrl)}/rest/v1/${encodeURIComponent(
     artistsTable,
-  )}?${searchParams.toString()}`
+  )}?${new URLSearchParams({ select: '*' })}`
 
   try {
     const supabaseResponse = await fetch(artistsUrl, {
@@ -79,25 +82,21 @@ export default async function handler(request, response) {
     })
 
     const responseText = await supabaseResponse.text()
-    const artists = responseText ? JSON.parse(responseText) : []
+    const payload = responseText ? JSON.parse(responseText) : []
 
     if (!supabaseResponse.ok) {
       response.status(supabaseResponse.status).json({
         error: 'Supabase artists request failed.',
-        details: artists,
+        details: payload,
         artists: [],
       })
       return
     }
 
-    const artistsWithImageUrls = (Array.isArray(artists) ? artists : []).map((artist) => ({
-      ...artist,
-      imageUrls: uniqueValues([...(artist.imageUrls ?? []), ...getArtistImageUrls({ artist, supabaseUrl })]),
-    }))
+    const artists = Array.isArray(payload) ? payload : []
 
     response.status(200).json({
-      artists: artistsWithImageUrls,
-      supabaseUrl,
+      artists: getArtistsWithImageUrls(artists, supabaseUrl),
     })
   } catch (error) {
     response.status(500).json({
