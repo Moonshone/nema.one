@@ -132,6 +132,45 @@ button {
   line-height: 1;
 }
 
+
+.flag-en {
+  position: relative;
+  background:
+    linear-gradient(to bottom,
+      #b22234 0 7.69%, #ffffff 7.69% 15.38%,
+      #b22234 15.38% 23.07%, #ffffff 23.07% 30.76%,
+      #b22234 30.76% 38.45%, #ffffff 38.45% 46.14%,
+      #b22234 46.14% 53.83%, #ffffff 53.83% 61.52%,
+      #b22234 61.52% 69.21%, #ffffff 69.21% 76.9%,
+      #b22234 76.9% 84.59%, #ffffff 84.59% 92.28%,
+      #b22234 92.28% 100%);
+}
+
+.flag-en::before {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 42%;
+  height: 54%;
+  content: '';
+  background: #3c3b6e;
+}
+
+.flag-en::after {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  color: #ffffff;
+  content: '✦';
+  font-size: 5px;
+  letter-spacing: 1px;
+  text-shadow: 4px 0 #ffffff, 0 4px #ffffff, 4px 4px #ffffff;
+}
+
+.flag-de {
+  background: linear-gradient(to bottom, #000000 0 33.33%, #dd0000 33.33% 66.66%, #ffce00 66.66% 100%);
+}
+
 .persianFlag {
   position: relative;
   display: block;

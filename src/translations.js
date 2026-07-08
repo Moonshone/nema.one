@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    languageName: 'English',
+    languageName: 'American English',
     shortName: 'EN',
     switchLabel: 'Select language',
     artists: {

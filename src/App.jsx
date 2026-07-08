@@ -3,11 +3,6 @@ import Artists from './Artists.jsx'
 import { getInitialLanguage, saveLanguage } from './languageStorage.js'
 import translations from './translations.js'
 
-const languageFlags = {
-  en: '🇬🇧',
-  de: '🇩🇪',
-}
-
 function LanguageFlag({ code }) {
   if (code === 'fa') {
     return (
@@ -18,11 +13,7 @@ function LanguageFlag({ code }) {
     )
   }
 
-  return (
-    <span aria-hidden="true" className="languageFlag">
-      {languageFlags[code]}
-    </span>
-  )
+  return <span aria-hidden="true" className={`languageFlag flag-${code}`} />
 }
 
 function App() {
