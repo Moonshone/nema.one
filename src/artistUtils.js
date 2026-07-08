@@ -6,6 +6,7 @@ const pickFilled = (values) => values.find(isFilled) ?? ''
 
 const getDefaultArtistName = (artist) =>
   pickFilled([
+    artist.display_name,
     joinFilled(artist.Firstname, artist.Lastname),
     artist.name,
     artist.full_name,
