@@ -55,8 +55,9 @@ button {
 
 .siteLogo img {
   display: block;
-  width: clamp(72px, 10vw, 106px);
+  width: clamp(96px, 13vw, 140px);
   height: auto;
+  object-fit: contain;
 }
 
 .homePage {
