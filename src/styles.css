@@ -27,6 +27,7 @@ button {
 }
 
 .siteHeader {
+  direction: ltr;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -44,7 +45,9 @@ button {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
+  padding: 4px;
   border-radius: 14px;
+  background: #f2ffe4;
 }
 
 .siteLogo:focus-visible {
@@ -54,8 +57,9 @@ button {
 
 .siteLogo img {
   display: block;
-  width: clamp(78px, 11.2vw, 118px);
+  width: clamp(96px, 13vw, 140px);
   height: auto;
+  object-fit: contain;
 }
 
 .homePage {
@@ -66,6 +70,7 @@ button {
 }
 
 .languageSwitcher {
+  direction: ltr;
   position: relative;
   display: inline-flex;
   max-width: 100%;
@@ -254,16 +259,31 @@ h1 {
 .artistsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 3vw, 24px);
+  justify-items: center;
+  gap: clamp(28px, 5vw, 44px);
   text-align: left;
 }
 
+.artistCardItem {
+  width: 80%;
+}
+
 .artistCard {
+  display: block;
   overflow: hidden;
   border: 1px solid rgba(23, 53, 31, 0.12);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.72);
+  color: inherit;
+  text-decoration: none;
   box-shadow: 0 12px 36px rgba(23, 53, 31, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.artistCard:hover,
+.artistCard:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 48px rgba(23, 53, 31, 0.12);
 }
 
 .artistImage {
@@ -278,12 +298,62 @@ h1 {
   padding: clamp(18px, 4vw, 24px);
 }
 
-.artistContent h2 {
-  margin: 0;
+.artistDetailSection {
+  display: grid;
+  gap: clamp(22px, 4vw, 36px);
+}
+
+.artistBackLink {
+  width: fit-content;
   color: #17351f;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.artistBackLink:hover,
+.artistBackLink:focus-visible {
+  text-decoration: underline;
+}
+
+.artistDetailCard {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 48px);
+  align-items: start;
+}
+
+.artistDetailImage {
+  display: block;
+  width: 100%;
+  border-radius: 24px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(23, 53, 31, 0.08);
+}
+
+.artistDetailContent p {
+  margin: 18px 0 0;
+  color: #3d5a44;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.7;
+}
+
+.artistName {
+  margin: clamp(12px, 2vw, 16px) 0 0;
+  text-align: center;
   font-size: clamp(1.3rem, 3vw, 1.7rem);
   line-height: 1.15;
   letter-spacing: -0.04em;
+}
+
+.artistName a {
+  color: #17351f;
+  text-decoration: none;
+}
+
+.artistName a:hover,
+.artistName a:focus-visible {
+  text-decoration: underline;
 }
 
 .artistContent p {
@@ -303,6 +373,10 @@ h1 {
   }
 
   .artistsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .artistDetailCard {
     grid-template-columns: 1fr;
   }
 }
