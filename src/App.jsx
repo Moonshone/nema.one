@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import logoUrl from '/nema-logo.svg?url'
 import ArtistDetail from './ArtistDetail.jsx'
 import Artists from './Artists.jsx'
 import { getInitialLanguage, saveLanguage } from './languageStorage.js'
@@ -53,7 +52,7 @@ function App() {
     <div className="siteShell">
       <header className="siteHeader">
         <a className="siteLogo" href="/" aria-label="nema home">
-          <img alt="nema" src={logoUrl} />
+          <img alt="nema" src="/logo.png" />
         </a>
 
         <div className="languageSwitcher" ref={languageSwitcherRef}>
