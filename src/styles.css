@@ -45,7 +45,9 @@ button {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
+  padding: 4px;
   border-radius: 14px;
+  background: #f2ffe4;
 }
 
 .siteLogo:focus-visible {
