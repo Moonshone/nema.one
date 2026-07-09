@@ -10,6 +10,9 @@ const translations = {
       empty: 'There are currently no artists.',
       error: 'The artists could not be loaded.',
       imageAlt: 'Artist image',
+      detailSectionLabel: 'Artist detail',
+      backToArtists: 'Back to artists',
+      notFound: 'This artist could not be found.',
     },
   },
   de: {
@@ -23,6 +26,9 @@ const translations = {
       empty: 'Aktuell sind keine Künstler vorhanden.',
       error: 'Die Künstler konnten nicht geladen werden.',
       imageAlt: 'Künstlerbild',
+      detailSectionLabel: 'Künstlerdetail',
+      backToArtists: 'Zurück zu den Künstlern',
+      notFound: 'Dieser Künstler konnte nicht gefunden werden.',
     },
   },
   fa: {
@@ -36,6 +42,9 @@ const translations = {
       empty: 'در حال حاضر هنرمندی وجود ندارد.',
       error: 'هنرمندان بارگذاری نشدند.',
       imageAlt: 'تصویر هنرمند',
+      detailSectionLabel: 'جزئیات هنرمند',
+      backToArtists: 'بازگشت به هنرمندان',
+      notFound: 'این هنرمند پیدا نشد.',
     },
   },
 }
