@@ -52,7 +52,7 @@ function App() {
     <div className="siteShell">
       <header className="siteHeader">
         <a className="siteLogo" href="/" aria-label="nema home">
-          <img alt="nema" src="/nema-logo.svg" />
+          <img alt="nema" src="/logo.png" />
         </a>
 
         <div className="languageSwitcher" ref={languageSwitcherRef}>
